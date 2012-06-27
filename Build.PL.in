@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use Module::Build; # -*-perl-*-
+
+my $build = Module::Build->new(
+    module_name   => '@LCFG_FULLNAME@',
+    dist_abstract => '@LCFG_ABSTRACT@',
+    dist_author   => '@LCFG_AUTHOR@',
+    dist_version  => '@LCFG_VERSION@',
+    license => 'gpl',
+    requires => {
+        'DateTime'                  => 0,
+        'DBIx::Class'               => '0.08196',
+        'Digest::SHA'               => 0,
+        'File::Find::Rule'          => 0,
+        'File::LibMagic'            => 0,
+        'IO::Uncompress::Bunzip2'   => '2.020',
+        'IO::Uncompress::Gunzip'    => '2.020',
+        'List::MoreUtils'           => 0,
+        'Moose'                     => '0.57',
+        'MooseX::Types'             => '0.21',
+        'Readonly'                  => 0,
+        'UNIVERSAL::require'        => 0,
+        'perl'                      => '5.10.0',
+    },
+    build_requires => {
+        'Test::More'        => '0.87',
+    },
+    add_to_cleanup => [ 'MANIFEST.bak', 'ChangeLog.bak' ],
+    create_makefile_pl => 'traditional',
+);
+
+$build->create_build_script;
