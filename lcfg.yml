@@ -7,9 +7,10 @@ build:
   gencmake: 0
   remove_input_after_translate: 1
   translate_before_pack: 1
-date: 30/06/11 05:21:03
+date: 27/06/12 17:23:27
 license: GPLv2
 name: BuzzSaw
+orgident: org.lcfg
 platforms: 
   - ScientificLinux6
 release: 1
@@ -20,4 +21,4 @@ vcs:
   checkcommitted: 1
   genchangelog: 1
   logname: ChangeLog
-version: 0.0.1
+version: 0.0.2

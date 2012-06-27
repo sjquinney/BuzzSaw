@@ -1,0 +1,24 @@
+2012-06-27  SVN: new release
+
+	* Release: 0.0.2
+
+2012-06-27 17:23  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: Added buildtools project file
+
+2012-06-27 17:19  squinney@INF.ED.AC.UK
+
+	* ., buzzsaw.sql, lib, lib/BuzzSaw, lib/BuzzSaw/Catalogue,
+	  lib/BuzzSaw/Catalogue.pm, lib/BuzzSaw/DB, lib/BuzzSaw/DB.pm,
+	  lib/BuzzSaw/DB/Schema, lib/BuzzSaw/DB/Schema.pm,
+	  lib/BuzzSaw/DB/Schema/Result,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm,
+	  lib/BuzzSaw/DB/Schema/Result/Log.pm,
+	  lib/BuzzSaw/DB/Schema/Result/Tag.pm, lib/BuzzSaw/DataSource,
+	  lib/BuzzSaw/DataSource.pm, lib/BuzzSaw/DataSource/Files.pm,
+	  lib/BuzzSaw/Filter, lib/BuzzSaw/Filter.pm,
+	  lib/BuzzSaw/Filter/Auth.pm, lib/BuzzSaw/Filter/Kernel.pm,
+	  lib/BuzzSaw/Importer.pm, lib/BuzzSaw/Parser,
+	  lib/BuzzSaw/Parser.pm, lib/BuzzSaw/Parser/RFC3339.pm: Added new
+	  project for parsing and filtering entries in log files
+
