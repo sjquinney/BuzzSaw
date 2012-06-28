@@ -1,6 +1,37 @@
-2012-06-27  SVN: new release
+2012-06-28  SVN: new release
 
-	* Release: 0.0.2
+	* Release: 0.1.0
+
+2012-06-28 14:48  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Parser/RFC3339.pm: Output the whole line
+	  when the parsing fails
+
+2012-06-28 14:44  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec: No README right now
+
+2012-06-28 14:41  squinney@INF.ED.AC.UK
+
+	* MANIFEST, MANIFEST.SKIP, META.yml.in, Makefile.PL: Added various
+	  files which are necessary for building the module package
+
+2012-06-28 07:32  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm: simplified the way the
+	  uncompression of files is done as it was not reliable enough
+
+2012-06-27 17:59  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec, lcfg.yml: Added specfile
+
+2012-06-27 17:35  squinney@INF.ED.AC.UK
+
+	* Build.PL.in: Added Module::Build script
+
+2012-06-27 17:23  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.0.2
 
 2012-06-27 17:23  squinney@INF.ED.AC.UK
 
