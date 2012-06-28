@@ -4,16 +4,18 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
-# $Id:$
+# $Id$
 # $Source:$
-# $Revision:$
-# $HeadURL:$
-# $Date:$
+# $Revision$
+# $HeadURL$
+# $Date$
 
 use DateTime;
 
 use Moose;
 use MooseX::Types::Moose qw(Bool);
+
+with 'MooseX::Log::Log4perl';
 
 has 'sources' => (
     traits   => ['Array'],

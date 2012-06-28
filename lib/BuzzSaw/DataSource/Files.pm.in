@@ -4,11 +4,11 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
-# $Id:$
+# $Id$
 # $Source:$
-# $Revision:$
-# $HeadURL:$
-# $Date:$
+# $Revision$
+# $HeadURL$
+# $Date$
 
 use Cwd ();
 use Digest::SHA ();
@@ -20,7 +20,7 @@ use Moose;
 use MooseX::Types::Moose qw(Bool);
 use Moose::Meta::Attribute::Native::Trait::Array;
 
-with 'BuzzSaw::DataSource';
+with 'BuzzSaw::DataSource', 'MooseX::Log::Log4perl';
 
 has 'directories' => (
     traits   => ['Array'],

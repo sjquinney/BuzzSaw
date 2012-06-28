@@ -4,11 +4,11 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
-# $Id:$
+# $Id$
 # $Source:$
-# $Revision:$
-# $HeadURL:$
-# $Date:$
+# $Revision$
+# $HeadURL$
+# $Date$
 
 use UNIVERSAL::require;
 

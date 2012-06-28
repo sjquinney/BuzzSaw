@@ -6,13 +6,13 @@ our $VERSION = '@LCFG_VERSION@';
 
 use Moose;
 
-with 'BuzzSaw::Parser';
+with 'BuzzSaw::Parser', 'MooseX::Log::Log4perl';
 
-# $Id:$
+# $Id$
 # $Source:$
-# $Revision:$
-# $HeadURL:$
-# $Date:$
+# $Revision$
+# $HeadURL$
+# $Date$
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

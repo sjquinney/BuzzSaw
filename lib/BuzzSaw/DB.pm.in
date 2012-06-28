@@ -4,18 +4,18 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
-# $Id:$
+# $Id$
 # $Source:$
-# $Revision:$
-# $HeadURL:$
-# $Date:$
+# $Revision$
+# $HeadURL$
+# $Date$
 
 use BuzzSaw::DB::Schema;
 
 use Moose;
 use MooseX::Types::Moose qw(Int Str);
 
-with 'BuzzSaw::Catalogue';
+with 'BuzzSaw::Catalogue', 'MooseX::Log::Log4perl';
 
 has 'name' => (
     is       => 'ro',
