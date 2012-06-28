@@ -167,6 +167,9 @@ sub _next_fh {
         my $current_file   = $self->_current_filename;
         my $current_digest = $self->_current_digest;
         $self->catalogue->register_log( $current_file, $current_digest );
+
+        $self->catalogue->end_transaction();
+
         $current_fh->close;
     }
 
@@ -208,6 +211,8 @@ sub _next_fh {
     }
 
     $self->_current_fh($new_fh);
+
+    $self->begin_transaction();
 
     return $new_fh;
 }

@@ -13,7 +13,8 @@ our $VERSION = '@LCFG_VERSION@';
 use Moose::Role;
 
 requires 'register_event', 'check_event_seen',
-         'register_log', 'check_log_seen';
+         'register_log', 'check_log_seen',
+         'begin_transaction', 'end_transaction';
 
 no Moose::Role;
 

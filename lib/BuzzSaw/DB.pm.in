@@ -96,6 +96,18 @@ sub _connect {
     return $schema;
 }
 
+sub begin_transaction {
+  my ($self) = @_;
+
+  $self->schema->txn_begin;
+}
+
+sub end_transaction {
+  my ($self) = @_;
+
+  $self->schema->txn_commit;
+}
+
 sub register_event {
     my ( $self, $event ) = @_;
 
