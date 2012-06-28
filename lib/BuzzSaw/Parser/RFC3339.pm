@@ -64,7 +64,7 @@ sub parse_line {
         }
  
     } else {
-        die "Failed to parse line\n";
+        die "Failed to parse line: $line\n";
     }
 
     return %results;
