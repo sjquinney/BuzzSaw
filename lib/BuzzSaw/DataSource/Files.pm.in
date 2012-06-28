@@ -212,7 +212,7 @@ sub _next_fh {
 
     $self->_current_fh($new_fh);
 
-    $self->begin_transaction();
+    $self->catalogue->begin_transaction();
 
     return $new_fh;
 }
