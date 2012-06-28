@@ -1,6 +1,53 @@
 2012-06-28  SVN: new release
 
-	* Release: 0.1.0
+	* Release: 0.1.1
+
+2012-06-28 15:26  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Catalogue.pm.in, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DataSource/Files.pm.in: Added support for using
+	  transactions with the database. Use the new transaction functions
+	  so that we are not committing changes quite so frequently
+
+2012-06-28 15:08  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Catalogue.pm.in, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DB/Schema.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Log.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Tag.pm.in,
+	  lib/BuzzSaw/DataSource.pm.in, lib/BuzzSaw/DataSource/Files.pm.in,
+	  lib/BuzzSaw/Filter.pm.in, lib/BuzzSaw/Filter/Auth.pm.in,
+	  lib/BuzzSaw/Filter/Kernel.pm.in, lib/BuzzSaw/Importer.pm.in,
+	  lib/BuzzSaw/Parser.pm.in, lib/BuzzSaw/Parser/RFC3339.pm.in:
+	  Enabled MooseX::Log::Log4perl for various modules. Also set
+	  svn:keywords on all Perl modules
+
+2012-06-28 14:58  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Catalogue.pm, lib/BuzzSaw/Catalogue.pm.in,
+	  lib/BuzzSaw/DB.pm, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DB/Schema.pm, lib/BuzzSaw/DB/Schema.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Log.pm,
+	  lib/BuzzSaw/DB/Schema/Result/Log.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Tag.pm,
+	  lib/BuzzSaw/DB/Schema/Result/Tag.pm.in,
+	  lib/BuzzSaw/DataSource.pm, lib/BuzzSaw/DataSource.pm.in,
+	  lib/BuzzSaw/DataSource/Files.pm,
+	  lib/BuzzSaw/DataSource/Files.pm.in, lib/BuzzSaw/Filter.pm,
+	  lib/BuzzSaw/Filter.pm.in, lib/BuzzSaw/Filter/Auth.pm,
+	  lib/BuzzSaw/Filter/Auth.pm.in, lib/BuzzSaw/Filter/Kernel.pm,
+	  lib/BuzzSaw/Filter/Kernel.pm.in, lib/BuzzSaw/Importer.pm,
+	  lib/BuzzSaw/Importer.pm.in, lib/BuzzSaw/Parser.pm,
+	  lib/BuzzSaw/Parser.pm.in, lib/BuzzSaw/Parser/RFC3339.pm,
+	  lib/BuzzSaw/Parser/RFC3339.pm.in: Switched to preprocessed perl
+	  module files so we get the version numbers inserted at build time
+
+2012-06-28 14:48  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.1.0
 
 2012-06-28 14:48  squinney@INF.ED.AC.UK
 
