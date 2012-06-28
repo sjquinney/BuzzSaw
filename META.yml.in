@@ -1,0 +1,74 @@
+---
+name: BuzzSaw
+version: v0.0.2_dev
+author:
+  - 'Stephen Quinney <squinney@inf.ed.ac.uk>'
+abstract: Tools for parsing and filtering log files
+license: gpl
+resources:
+  license: http://opensource.org/licenses/gpl-license.php
+build_requires:
+  Test::More: 0.87
+requires:
+  DBIx::Class: 0.08196
+  DateTime: 0
+  Digest::SHA: 0
+  File::Find::Rule: 0
+  File::LibMagic: 0
+  IO::Uncompress::Bunzip2: 2.020
+  IO::Uncompress::Gunzip: 2.020
+  List::MoreUtils: 0
+  Moose: 0.57
+  MooseX::Types: 0.21
+  Readonly: 0
+  UNIVERSAL::require: 0
+  perl: v5.10.0
+configure_requires:
+  Module::Build: 0.35
+provides:
+  BuzzSaw::Catalogue:
+    file: lib/BuzzSaw/Catalogue.pm
+    version: 0
+  BuzzSaw::DB:
+    file: lib/BuzzSaw/DB.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DB::Schema:
+    file: lib/BuzzSaw/DB/Schema.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DB::Schema::Result::Event:
+    file: lib/BuzzSaw/DB/Schema/Result/Event.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DB::Schema::Result::Log:
+    file: lib/BuzzSaw/DB/Schema/Result/Log.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DB::Schema::Result::Tag:
+    file: lib/BuzzSaw/DB/Schema/Result/Tag.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DataSource:
+    file: lib/BuzzSaw/DataSource.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::DataSource::Files:
+    file: lib/BuzzSaw/DataSource/Files.pm
+     version: @LCFG_VERSION@
+  BuzzSaw::Filter:
+    file: lib/BuzzSaw/Filter.pm
+     version: @LCFG_VERSION@
+  BuzzSaw::Filter::Auth:
+    file: lib/BuzzSaw/Filter/Auth.pm
+     version: @LCFG_VERSION@
+  BuzzSaw::Filter::Kernel:
+    file: lib/BuzzSaw/Filter/Kernel.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::Importer:
+    file: lib/BuzzSaw/Importer.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::Parser:
+    file: lib/BuzzSaw/Parser.pm
+    version: @LCFG_VERSION@
+  BuzzSaw::Parser::RFC3339:
+    file: lib/BuzzSaw/Parser/RFC3339.pm
+    version: @LCFG_VERSION@
+generated_by: Module::Build version 0.35
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4

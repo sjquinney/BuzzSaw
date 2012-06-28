@@ -1,0 +1,23 @@
+Build.PL
+BuzzSaw.spec
+buzzsaw.sql
+ChangeLog
+lcfg.yml
+lib/BuzzSaw/Catalogue.pm
+lib/BuzzSaw/DataSource.pm
+lib/BuzzSaw/DataSource/Files.pm
+lib/BuzzSaw/DB.pm
+lib/BuzzSaw/DB/Schema.pm
+lib/BuzzSaw/DB/Schema/Result/Event.pm
+lib/BuzzSaw/DB/Schema/Result/Log.pm
+lib/BuzzSaw/DB/Schema/Result/Tag.pm
+lib/BuzzSaw/Filter.pm
+lib/BuzzSaw/Filter/Auth.pm
+lib/BuzzSaw/Filter/Kernel.pm
+lib/BuzzSaw/Importer.pm
+lib/BuzzSaw/Parser.pm
+lib/BuzzSaw/Parser/RFC3339.pm
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+META.yml
