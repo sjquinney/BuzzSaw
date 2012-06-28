@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %files
 %defattr(-,root,root)
-%doc ChangeLog README
+%doc ChangeLog
 %doc %{_mandir}/man3/*
 %{perl_vendorlib}/BuzzSaw
 
