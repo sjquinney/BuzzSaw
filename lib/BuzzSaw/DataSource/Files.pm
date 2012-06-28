@@ -13,12 +13,8 @@ our $VERSION = '@LCFG_VERSION@';
 use Cwd ();
 use Digest::SHA ();
 use File::Find::Rule ();
-use File::LibMagic ();
 use IO::File ();
 use List::MoreUtils ();
-use Readonly;
-
-Readonly my @SUPPORTED_TYPES => qw(text/plain application/x-gzip application/x-bzip2);
 
 use Moose;
 use MooseX::Types::Moose qw(Bool);
@@ -89,14 +85,6 @@ has '_current_fh' => (
     init_arg => undef,
 );
 
-has '_flm' => (
-    isa      => 'File::LibMagic',
-    is       => 'ro',
-    required => 1,
-    lazy     => 1,
-    default  => sub { File::LibMagic->new() },
-);
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
@@ -133,24 +121,10 @@ sub _find_files {
             $file = Cwd::abs_path($file);
         }
 
-        # Only store the names of files which can actually be parsed
-#        my $type = $self->get_filetype($file);
-
-#        if ( List::MoreUtils::any { $_ eq $type } @SUPPORTED_TYPES ) {
-            push @files, $file;
-#        }
+        push @files, $file;
     }
 
     return \@files;
-}
-
-sub get_filetype {
-    my ( $self, $file ) = @_;
-
-    my $type = $self->_flm->checktype_filename($file);
-    $type = ( split /;/, $type, 2 )[0];
-
-    return $type;
 }
 
 sub reset {
@@ -207,16 +181,13 @@ sub _next_fh {
         warn "Opening $file\n";
 
         $new_fh = eval {
-            my $type = $self->get_filetype($file);
 
             my $fh;
-            if ( $type eq 'application/x-gzip' ) {
-                warn "gzip compressed file\n";
+            if ( $file =~ m/\.gz$/ ) {
                 require IO::Uncompress::Gunzip;
                 $fh = IO::Uncompress::Gunzip->new($file)
                     or die "Could not open $file: $IO::Uncompress::Gunzip::GunzipError\n";
-            } elsif ( $type eq 'application/x-bzip2' ) {
-                warn "bzip2 compressed file\n";
+            } elsif ( $file =~ m/\.bz2$/ ) {
                 require IO::Uncompress::Bunzip2;
                 $fh = IO::Uncompress::Bunzip2->new($file)
                     or die "Could not open $file: $IO::Uncompress::Bunzip2::Bunzip2Error\n";
