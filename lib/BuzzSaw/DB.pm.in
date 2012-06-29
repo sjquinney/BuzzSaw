@@ -117,7 +117,7 @@ sub start_processing {
 
   my $dbh = $schema->storage->dbh();
 
-  my $sql = q{SELECT * FROM register_processing(?)};
+  my $sql = q{SELECT * FROM register_current_processing(?)};
 
   my $sth = $dbh->prepare_cached($sql);
 
