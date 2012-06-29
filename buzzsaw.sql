@@ -15,6 +15,35 @@ CREATE TABLE log (
 
 CREATE INDEX log_name ON log (name);
 
+CREATE TABLE current_processing (
+    id        SERIAL                       PRIMARY KEY,
+    name      VARCHAR(200)                 NOT NULL UNIQUE,
+    starttime TIMESTAMP WITH TIME ZONE     NOT NULL DEFAULT current_timestamp
+);
+
+CREATE OR REPLACE FUNCTION register_current_processing(n current_processing.name%TYPE) RETURNS void AS $$
+DECLARE logcount INTEGER;
+BEGIN
+
+    LOCK TABLE current_processing IN ACCESS EXCLUSIVE MODE;
+
+    -- Timeout any processing entries after 1 hour
+    DELETE FROM current_processing
+      WHERE starttime < current_timestamp - interval '1 hour';
+
+    SELECT COUNT(*) INTO logcount
+      FROM current_processing
+      WHERE name = n;
+
+    IF logcount > 0 THEN
+      RAISE EXCEPTION 'File already being processed';
+    ELSE
+      INSERT INTO current_processing (name) VALUES (n);
+    END IF;
+
+END;
+$$  LANGUAGE plpgsql;
+
 CREATE TABLE event (
     id       SERIAL                        PRIMARY KEY,
     raw      VARCHAR(1000)                 NOT NULL,
