@@ -108,6 +108,40 @@ sub end_transaction {
   $self->schema->txn_commit;
 }
 
+sub start_processing {
+  my ( $self, $logname ) = @_;
+
+  my $schema = $self->schema;
+
+  # Break out the raw SQL for the easiest way to call the registration function
+
+  my $dbh = $schema->storage->dbh();
+
+  my $sql = q{SELECT * FROM register_processing(?)};
+
+  my $sth = $dbh->prepare_cached($sql);
+
+  eval {
+    $sth->execute($logname);
+    $sth->finish;
+  };
+
+  my $result = $@ ? 0 : 1;
+
+  return $result;
+}
+
+sub end_processing {
+  my ( $self, $logname ) = @_;
+
+  my $schema = $self->schema;
+  my $rs = $self->schema->resultset('CurrentProcessing')->search( { name => $logname } );
+
+  eval { $rs->delete() };
+
+  return;
+}
+
 sub register_event {
     my ( $self, $event ) = @_;
 

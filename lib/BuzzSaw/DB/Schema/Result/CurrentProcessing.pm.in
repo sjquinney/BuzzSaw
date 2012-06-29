@@ -1,0 +1,69 @@
+package BuzzSaw::DB::Schema::Result::CurrentProcessing;
+use strict;
+use warnings;
+
+use base 'DBIx::Class::Core';
+
+=head1 NAME
+
+BuzzSaw::DB::Schema::Result::CurrentProcessing
+
+=cut
+
+__PACKAGE__->load_components(qw/InflateColumn::DateTime Core/);
+__PACKAGE__->table('current_processing');
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: integer
+  default_value: nextval('current_processing_id_seq'::regclass)
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 name
+
+  data_type: character varying
+  default_value: undef
+  is_nullable: 0
+  size: 200
+
+=head2 starttime
+
+  data_type: timestamp with time zone
+  default_value: current_timestamp
+  is_nullable: 0
+
+=cut
+
+=cut
+
+__PACKAGE__->add_columns(
+  'id',
+  {
+    data_type         => 'integer',
+    default_value     => \q{nextval('current_processing_id_seq'::regclass)},
+    is_auto_increment => 1,
+    is_nullable       => 0,
+  },
+  'name',
+  {
+    data_type         => 'character varying',
+    default_value     => undef,
+    is_nullable       => 0,
+    size              => 200,
+  },
+  'starttime',
+  {
+    data_type         => 'datetime',
+    default_value     => undef,
+    is_nullable       => 0,
+  },
+);
+
+__PACKAGE__->set_primary_key('id');
+__PACKAGE__->add_unique_constraint( 'current_processing_name_key', ['name'] );
+
+1;
+__END__
