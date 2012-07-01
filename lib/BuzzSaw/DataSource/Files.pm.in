@@ -115,15 +115,15 @@ sub _find_files {
 
     my $iter = $finder->start($self->list_directories);
 
-    my @files;
+    my %files;
     while ( defined( my $file = $iter->match ) ) {
-        if ( $file !~ m{^/} ) {
-            $file = Cwd::abs_path($file);
-        }
+      # converts relative to absolute path, resolves symbolic links
+      $file = Cwd::abs_path($file);
 
-        push @files, $file;
+      $files{$file} = 1;
     }
 
+    my @files = keys %files;
     return \@files;
 }
 
@@ -170,10 +170,26 @@ sub _next_fh {
 
         $self->catalogue->end_transaction();
 
+        $self->catalogue->end_processing($current_file);
+
         $current_fh->close;
     }
 
+    # Register that the file is being processed. There is locking here
+    # to avoid multiple processes taking on the same file. Keep going
+    # until we find the next free file (or give up if the list is
+    # exhausted).
+
     my $file = $self->_next_filename;
+
+    my $can_start = 0;
+    while ( defined $file && !$can_start ) {
+      $can_start = $self->catalogue->start_processing($file);
+
+      if ( !$can_start ) {
+        $file = $self->_next_filename;
+      }
+    }
 
     # This ensures that if a file has disappeared or become
     # unopenable in anyway we just move on. Much better to do this
@@ -212,7 +228,9 @@ sub _next_fh {
 
     $self->_current_fh($new_fh);
 
-    $self->catalogue->begin_transaction();
+    if ( defined $new_fh ) {
+      $self->catalogue->begin_transaction();
+    }
 
     return $new_fh;
 }
