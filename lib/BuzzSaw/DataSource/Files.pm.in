@@ -175,21 +175,7 @@ sub _next_fh {
         $current_fh->close;
     }
 
-    # Register that the file is being processed. There is locking here
-    # to avoid multiple processes taking on the same file. Keep going
-    # until we find the next free file (or give up if the list is
-    # exhausted).
-
-    my $file = $self->_next_filename;
-
-    my $can_start = 0;
-    while ( defined $file && !$can_start ) {
-      $can_start = $self->catalogue->start_processing($file);
-
-      if ( !$can_start ) {
-        $file = $self->_next_filename;
-      }
-    }
+    my $file = $self->_next_free_filename;
 
     # This ensures that if a file has disappeared or become
     # unopenable in anyway we just move on. Much better to do this
@@ -221,7 +207,7 @@ sub _next_fh {
         if ( $@ || !defined $new_fh ) {
             warn "$@" if $@;
             # just move onto the next available file
-            $file = $self->_next_filename;
+            $file = $self->_next_free_filename;
         }
 
     }
@@ -245,6 +231,28 @@ sub _current_filename {
     }
 
     return $filename;
+}
+
+sub _next_free_filename {
+  my ($self) = @_;
+
+  # Register that the file is being processed. There is locking here
+  # to avoid multiple processes taking on the same file. Keep going
+  # until we find the next free file (or give up if the list is
+  # exhausted).
+
+  my $file = $self->_next_filename;
+
+  my $can_start = 0;
+  while ( defined $file && !$can_start ) {
+    $can_start = $self->catalogue->start_processing($file);
+
+    if ( !$can_start ) {
+      $file = $self->_next_filename;
+    }
+  }
+
+  return $file;
 }
 
 sub _next_filename {
