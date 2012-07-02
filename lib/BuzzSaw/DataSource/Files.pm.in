@@ -123,7 +123,11 @@ sub _find_files {
       $files{$file} = 1;
     }
 
-    my @files = keys %files;
+    # We randomise the order of the list so that multiple processes
+    # will pass through the files in different orders and this should
+    # make the process more efficient.
+
+    my @files = List::Util::shuffle( keys %files );
     return \@files;
 }
 
