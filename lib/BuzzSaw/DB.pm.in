@@ -111,8 +111,6 @@ sub end_transaction {
 sub start_processing {
   my ( $self, $logname, $digest, $readall ) = @_;
 
-  warn "Checking $logname is free\n";
-
   my $schema = $self->schema;
 
   # Break out the raw SQL for the easiest way to call the registration function
@@ -130,7 +128,7 @@ sub start_processing {
 
   my $result;
   if ($@) {
-      warn "Already processing $logname elsewhere\n";
+      warn "Will not process $logname: $@\n";
       $result = 0;
   } else {
       warn "$logname is free\n";
