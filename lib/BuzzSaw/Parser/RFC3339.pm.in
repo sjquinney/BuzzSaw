@@ -40,7 +40,7 @@ sub parse_line {
                       \s+
                       (?<hostname>\S+)                   # hostname
                       \s+
-                      (?<message>.+)                     # message
+                      (?<message>.*)                     # message
                      $}xo ) {
         %results = %+;
 
@@ -49,6 +49,8 @@ sub parse_line {
         } else {
             $results{nanosecond} = 0;
         }
+
+        $results{message} //= q{};
 
         # Attempt to acquire more information from the message
 
@@ -62,7 +64,7 @@ sub parse_line {
                $}xo ) {
             %results = ( %results, %+ );
         }
- 
+
     } else {
         die "Failed to parse line: $line\n";
     }
