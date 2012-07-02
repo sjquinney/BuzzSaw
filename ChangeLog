@@ -1,6 +1,25 @@
 2012-07-02  SVN: new release
 
-	* Release: 0.2.0
+	* Release: 0.2.1
+
+2012-07-02 10:20  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Parser/RFC3339.pm.in: Handle an empty message string
+
+2012-07-02 10:15  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Auth.pm.in, t, t/00_use.t: Added basic
+	  compilation tests
+
+2012-07-02 09:55  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Auth.pm.in, lib/BuzzSaw/Filter/Kernel.pm.in:
+	  Added 'o' flag to some regular expressions to hopefully make them
+	  a little bit faster
+
+2012-07-02 09:15  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.2.0
 
 2012-07-02 09:07  squinney@INF.ED.AC.UK
 
