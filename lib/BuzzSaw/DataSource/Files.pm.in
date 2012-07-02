@@ -14,6 +14,7 @@ use Cwd ();
 use Digest::SHA ();
 use File::Find::Rule ();
 use IO::File ();
+use List::Util ();
 use List::MoreUtils ();
 
 use Moose;
@@ -128,6 +129,10 @@ sub _find_files {
     # make the process more efficient.
 
     my @files = List::Util::shuffle( keys %files );
+
+    my $count = scalar @files;
+    warn "Found $count files\n";
+
     return \@files;
 }
 
@@ -136,6 +141,7 @@ sub reset {
 
     $self->_current_fileidx(-1);
     $self->_current_fh(undef);
+    $self->_current_digest(undef);
 
     return $self->_set_files( $self->_find_files );
 }
@@ -242,10 +248,10 @@ sub _next_free_filename {
   # exhausted).
 
   my ( $file, $digest ) = $self->_next_filename;
-
+  
   my $can_start = 0;
   while ( defined $file && !$can_start ) {
-
+      print "checking if $file is free\n";
       $can_start = $self->catalogue->start_processing( $file, $digest,
                                                        $self->readall );
 
@@ -276,7 +282,7 @@ sub _next_filename {
       }
       $self->_current_fileidx($cur_fileidx);
 
-      my $next_filename = $self->_current_filename;
+      $next_filename = $self->_current_filename;
 
       if ( defined $next_filename ) {
 
