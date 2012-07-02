@@ -91,7 +91,7 @@ __PACKAGE__->meta->make_immutable;
 sub BUILD {
     my ($self) = @_;
 
-    if ( $self->count_files == 0 && $self->count_names == 0 ) {
+    if ( $self->count_names == 0 && $self->count_files == 0 ) {
         die "You must specify either a set of files or a set of names to find\n";
     }
 
