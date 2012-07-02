@@ -1,6 +1,43 @@
-2012-06-28  SVN: new release
+2012-07-02  SVN: new release
 
-	* Release: 0.1.1
+	* Release: 0.2.0
+
+2012-07-02 09:07  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Reworked slightly how we
+	  check if the next filename is already being processed
+
+2012-07-01 20:57  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: First attempt at marking the
+	  beginning and end of processing
+
+2012-06-29 16:20  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Fixed function name
+
+2012-06-29 16:17  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/CurrentProcessing.pm.in: Added
+	  support for registering that processing of a file has
+	  started/ended. This will help multiple processors avoid parsing
+	  the same files at the same time
+
+2012-06-29 15:52  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: Added new table for tracking the file currently
+	  being processed. Also added a function which will query this
+	  table with locking and timeout support
+
+2012-06-28 15:54  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Call begin_transaction on the
+	  correct object this time
+
+2012-06-28 15:48  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.1.1
 
 2012-06-28 15:26  squinney@INF.ED.AC.UK
 
