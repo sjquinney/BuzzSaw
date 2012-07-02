@@ -36,7 +36,7 @@ has 'directories' => (
 
 has 'names' => (
     traits   => ['Array'],
-    isa      => 'ArrayRef[Str]',
+    isa      => 'ArrayRef[Str|RegexpRef]',
     is       => 'ro',
     required => 1,
     default  => sub { [] },
