@@ -21,17 +21,17 @@ sub check {
     my $accept = 0;
     if ( exists $event->{program} && $event->{program} eq 'kernel' ) {
 
-        if ( $event->{message} =~ m/segfault/i ) {
+        if ( $event->{message} =~ m/segfault/io ) {
             $accept = 1;
             push @tags, 'segfault';
         } elsif ( $event->{message} =~
-                  m{^(.+ invoked oom-killer|Out of memory|Killed process)}i ) {
+                  m{^(.+ invoked oom-killer|Out of memory|Killed process)}io ) {
             $accept = 1;
             push @tags, 'oom';
-        } elsif ( $event->{message} =~ m/^(kernel panic |panic occurred)/i ) {
+        } elsif ( $event->{message} =~ m/^(kernel panic |panic occurred)/io ) {
             $accept = 1;
             push @tags, 'panic';
-        } elsif ( $event->{message} =~ m/^(Oops:|BUG:|kernel BUG|Unable to handle) /i ) {
+        } elsif ( $event->{message} =~ m/^(Oops:|BUG:|kernel BUG|Unable to handle) /io ) {
             $accept = 1;
             push @tags, 'oops';
         }

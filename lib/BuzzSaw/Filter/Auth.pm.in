@@ -26,7 +26,7 @@ sub check {
         } elsif ( $event->{program} eq 'unix_chkpwd' ) {
             $accept = 1;
 
-            if ( $event->{message} =~ m/^(?:could not obtain user info|password check failed for user) \(([^)]+)\)/ ) { 
+            if ( $event->{message} =~ m/^(?:could not obtain user info|password check failed for user) \(([^)]+)\)/o ) { 
                 $event->{userid} = $1;
                 push @tags, 'pam_error';
             }                
