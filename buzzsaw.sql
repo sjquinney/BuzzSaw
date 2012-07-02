@@ -21,13 +21,29 @@ CREATE TABLE current_processing (
     starttime TIMESTAMP WITH TIME ZONE     NOT NULL DEFAULT current_timestamp
 );
 
-CREATE OR REPLACE FUNCTION register_current_processing(n current_processing.name%TYPE) RETURNS void AS $$
+CREATE OR REPLACE FUNCTION register_current_processing(n current_processing.name%TYPE, d log.digest%TYPE, readall BOOLEAN) RETURNS void AS $$
 DECLARE logcount INTEGER;
 BEGIN
 
     LOCK TABLE current_processing IN ACCESS EXCLUSIVE MODE;
 
+    -- If the mode is not set for reading all files then raise an
+    -- error if we have already seen the file before.
+
+    IF NOT readall THEN
+      SELECT COUNT(*) INTO logcount
+        FROM log
+        WHERE digest = d;
+
+      IF logcount > 0 THEN
+        RAISE EXCEPTION 'Previously seen';
+      END IF;
+    END IF;
+
+    -- Check if the file is currently being processed.
+
     -- Timeout any processing entries after 1 hour
+
     DELETE FROM current_processing
       WHERE starttime < current_timestamp - interval '1 hour';
 
@@ -36,7 +52,7 @@ BEGIN
       WHERE name = n;
 
     IF logcount > 0 THEN
-      RAISE EXCEPTION 'File already being processed';
+      RAISE EXCEPTION 'Currently being processed';
     ELSE
       INSERT INTO current_processing (name) VALUES (n);
     END IF;
