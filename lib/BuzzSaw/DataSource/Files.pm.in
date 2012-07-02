@@ -143,10 +143,6 @@ sub reset {
 sub next_entry {
     my ($self) = @_;
 
-    my ( $entry, $id );
-
-    my $seen = 1;
-
     my $fh = $self->_current_fh // $self->_next_fh;
 
     # Ensure we do not attempt to get a line from an empty file
@@ -245,15 +241,18 @@ sub _next_free_filename {
   # until we find the next free file (or give up if the list is
   # exhausted).
 
-  my $file = $self->_next_filename;
+  my ( $file, $digest ) = $self->_next_filename;
 
   my $can_start = 0;
   while ( defined $file && !$can_start ) {
-    $can_start = $self->catalogue->start_processing($file);
+
+      $can_start = $self->catalogue->start_processing( $file, $digest,
+                                                       $self->readall );
 
     if ( !$can_start ) {
-      $file = $self->_next_filename;
+      ( $file, $digest ) = $self->_next_filename;
     }
+
   }
 
   return $file;
@@ -264,50 +263,45 @@ sub _next_filename {
 
     my $file_count = $self->count_files;
 
-    my $next_filename;
+    my ( $next_filename, $next_digest );
 
-    my $seen = 1;
-    while ($seen) {
-        my $cur_fileidx = $self->_current_fileidx;
-        if ( defined $cur_fileidx ) { 
-            if ( $cur_fileidx + 1 < $file_count ) {
-                $cur_fileidx  = $cur_fileidx + 1;
-            } else {
-                $cur_fileidx = undef;
-            }
-            $self->_current_fileidx($cur_fileidx);
-        }
-        my $new_filename = $self->_current_filename;
+    my $cur_fileidx = $self->_current_fileidx;
 
-        if ( !defined $new_filename ) {
-            last;
-        }
+    while ( defined $cur_fileidx && !defined $next_filename ) {
 
-        if ( !-e $new_filename ) {
-            warn "$new_filename has disappeared\n";
-            next;
-        }
+      if ( $cur_fileidx + 1 < $file_count ) {
+        $cur_fileidx  = $cur_fileidx + 1;
+      } else {
+        $cur_fileidx = undef;
+      }
+      $self->_current_fileidx($cur_fileidx);
 
-        my $sha = Digest::SHA->new(512);
-        $sha->addfile($new_filename);
-        my $file_digest = $sha->b64digest;
+      my $next_filename = $self->_current_filename;
 
-        # check if we have previously seen the new file
-        if ( $self->readall ) {
-            $seen = 0;
-        } else {
-            $seen = $self->catalogue->check_log_seen( $new_filename, $file_digest );
+      if ( defined $next_filename ) {
+
+        $next_digest = eval {
+          my $sha = Digest::SHA->new(256);
+          $sha->addfile($next_filename);
+          return $sha->b64digest;
+        };
+
+        if ( $@ || !defined $next_digest ) {
+          warn "Failed to calculate digest for $next_filename: $@\n";
+          $next_filename = undef;
+          $next_digest   = undef;
         }
 
-        if ( !$seen ) {
-            $next_filename = $new_filename;
-            $self->_current_digest($file_digest);
-        } else {
-            warn "Already seen $new_filename\n";
-        }
+      }
+
     }
 
-    return $next_filename;
+    # store digest for retrieval at end of processing run when we
+    # store it into the database to show that the file is done.
+
+    $self->_current_digest($next_digest);
+
+    return ( $next_filename, $next_digest );
 }
 
 1;
