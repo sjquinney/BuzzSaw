@@ -109,7 +109,7 @@ sub end_transaction {
 }
 
 sub start_processing {
-  my ( $self, $logname ) = @_;
+  my ( $self, $logname, $digest, $readall ) = @_;
 
   my $schema = $self->schema;
 
@@ -117,12 +117,12 @@ sub start_processing {
 
   my $dbh = $schema->storage->dbh();
 
-  my $sql = q{SELECT * FROM register_current_processing(?)};
+  my $sql = q{SELECT * FROM register_current_processing(?,?,?)};
 
   my $sth = $dbh->prepare_cached($sql);
 
   eval {
-    $sth->execute($logname);
+    $sth->execute( $logname, $digest, $readall );
     $sth->finish;
   };
 
