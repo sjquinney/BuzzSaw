@@ -203,7 +203,6 @@ sub _next_fh {
                 $fh = IO::Uncompress::Bunzip2->new($file)
                     or die "Could not open $file: $IO::Uncompress::Bunzip2::Bunzip2Error\n";
             } else {
-                warn "plain text file\n";
                 $fh = IO::File->new( $file, 'r' )
                     or die "Could not open $file: $!\n";
             }
@@ -248,10 +247,9 @@ sub _next_free_filename {
   # exhausted).
 
   my ( $file, $digest ) = $self->_next_filename;
-  
+
   my $can_start = 0;
   while ( defined $file && !$can_start ) {
-      print "checking if $file is free\n";
       $can_start = $self->catalogue->start_processing( $file, $digest,
                                                        $self->readall );
 
