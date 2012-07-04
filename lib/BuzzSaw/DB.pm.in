@@ -203,6 +203,8 @@ sub register_log {
 sub check_log_seen {
   my ( $self, $file, $digest ) = @_;
 
+  my $schema = $self->schema;
+
   my $dbh = $schema->storage->dbh();
 
   my $sql = q{SELECT id FROM log WHERE name = ? AND digest = ?};
