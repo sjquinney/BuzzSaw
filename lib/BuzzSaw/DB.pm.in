@@ -126,14 +126,7 @@ sub start_processing {
     $sth->finish;
   };
 
-  my $result;
-  if ($@) {
-      warn "Will not process $logname: $@\n";
-      $result = 0;
-  } else {
-      warn "$logname is free\n";
-      $result = 1;
-  }
+  my $result = $@ ? 0 : 1;
 
   return $result;
 }
