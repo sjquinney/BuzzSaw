@@ -4,6 +4,8 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
+use Readonly;
+
 use Moose;
 
 with 'BuzzSaw::Parser', 'MooseX::Log::Log4perl';
@@ -17,32 +19,69 @@ with 'BuzzSaw::Parser', 'MooseX::Log::Log4perl';
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
+# Regexp1. program and PID, followed by optional colon
+
+Readonly my $rfc3339_re =>
+    qr{
+       (?<year>\d{4})                      # year
+       -
+       (?<month>\d{2})                     # month
+       -
+       (?<day>\d{2})                       # day
+       T
+       (?<hour>\d{2})                      # hour
+       :
+       (?<minute>\d{2})                    # minute
+       :
+       (?<second>\d{2})                    # second
+       (?<nanosecond>\.\d+)?               # nanosecond
+       (?<time_zone>Z|(?:[+-]\d{2}:\d{2})) # time_zone
+      }xo;
+
+Readonly my $prog_re1 =>
+    qr{
+       (?<program>[^:\[]+)
+       \[
+       (?<pid>\d+)
+       (?:\]|(?=\s)) # closing bracket or next char is a space
+       :?
+      }xo;
+
+# Regexp2. program followed by mandatory colon (no PID)
+
+Readonly my $prog_re2 =>
+    qr{
+       (?<program>[^:]+)
+       :
+      }xo;
+
+Readonly my $prog_full_re =>
+    qr{
+       ($prog_re1|$prog_re2)
+       \s+
+       (?<message>.+)
+      }xo;
+
 sub parse_line {
     my ( $self, $line ) = @_;
 
     # These field names match those used by the DateTime module
 
     my %results;
-    if ( $line =~ m{^
-                      (?<year>\d{4})                     # year
-                      -
-                      (?<month>\d{2})                    # month
-                      -
-                      (?<day>\d{2})                      # day
-                      T
-                      (?<hour>\d{2})                     # hour
-                      :
-                      (?<minute>\d{2})                   # minute
-                      :
-                      (?<second>\d{2})                   # second
-                      (?<nanosecond>\.\d+)?              # nanosecond
-                      (?<time_zone>(?:\+|\-)\d{2}:\d{2}) # time_zone
-                      \s+
-                      (?<hostname>\S+)                   # hostname
-                      \s+
-                      (?<message>.*)                     # message
-                     $}xo ) {
-        %results = %+;
+
+    my ( $time, $hostname, $message ) = split ' ', $line, 3;
+
+    $results{hostname} = $hostname;
+    $results{message}  = defined $message  ? $message  : q{};
+
+    if ( $time =~ m{^$rfc3339_re$}o ) {
+        %results = ( %results, %+ );
+
+        if ( $results{time_zone} eq 'Z' ) {
+            $results{time_zone} = 'UTC';
+        } else {
+            $results{time_zone} =~ s/://;
+        }
 
         if ( defined $results{nanosecond} ) {
             $results{nanosecond} *= 1000000000;
@@ -50,27 +89,19 @@ sub parse_line {
             $results{nanosecond} = 0;
         }
 
-        $results{message} //= q{};
-
-        # Attempt to acquire more information from the message
-
-        if ( $results{message} =~
-             m{^
-               (?<program>[^\s:\[]+)       # program
-               (?:\[(?<pid>\d+)\])?        # pid
-               :
-               \s+
-               (?<message>.+)              # shortened message
-               $}xo ) {
-            %results = ( %results, %+ );
-        }
-
     } else {
-        die "Failed to parse line: $line\n";
+        die "Failed to parse RFC3339 timestamp in line: $line\n";
+    }
+
+    # Attempt to acquire more information from the message
+
+    if ( $results{message} =~ m{^$prog_full_re$}o ) {
+        %results = ( %results, %+ );
     }
 
     return %results;
 }
+
 
 1;
 __END__
