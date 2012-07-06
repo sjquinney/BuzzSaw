@@ -1,0 +1,20 @@
+package BuzzSaw::Report::Kernel;
+use strict;
+use warnings;
+
+use Moose;
+
+with 'BuzzSaw::Report';
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+sub generate {
+    my ($self) = @_;
+
+
+
+}
+
+1;
+__END__

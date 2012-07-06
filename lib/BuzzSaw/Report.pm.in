@@ -1,0 +1,79 @@
+package BuzzSaw::Report;
+use strict;
+use warnings;
+
+use BuzzSaw::DateTime;
+use Template;
+
+use Moose::Role;
+use Moose::Util::TypeConstraints;
+
+class_type('BuzzSaw::DateTime');
+
+coerce 'BuzzSaw::DateTime'
+    => from 'Int'
+    => via { my $dt = BuzzSaw::DateTime->from_epoch( epoch => $_ );
+             $dt->set_time_zone('local');
+             return $dt; };
+
+coerce 'BuzzSaw::DateTime'
+    => from 'Str'
+    => via { BuzzSaw::DateTime->from_date_string($_) };
+
+coerce 'BuzzSaw::DateTime'
+    => from 'HashRef'
+    => via { BuzzSaw::DateTime->new( time_zone => 'local', %{$_} ) };
+
+requires 'generate';
+
+has 'catalogue' => (
+    is       => 'ro',
+    isa      => 'BuzzSaw::DB',
+    required => 1,
+    default  => sub { BuzzSaw::DB->new_with_config() },
+    lazy     => 1,
+);
+
+has 'template' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+);
+
+has 'tmpldir' => (
+    is       => 'ro',
+    isa      => 'ArrayRef[Str]',
+    required => 1,
+    default  => sub { ['/usr/share/buzzsaw/templates/reports',
+                       '/usr/share/buzzsaw/templates'] },
+);
+
+has 'start' => (
+    is       => 'ro',
+    isa      => 'BuzzSaw::DateTime',
+    required => 1,
+    coerce   => 1,
+    default  => sub { 'yesterday' },
+);
+
+has 'end' => (
+    is       => 'ro',
+    isa      => 'BuzzSaw::DateTime',
+    required => 1,
+    coerce   => 1,
+    default  => sub { 'today' },
+);
+
+no Moose::Role;
+
+sub BUILD {
+    my ($self) = @_;
+
+    my $diff = $self->end - $self->start;
+    if ( $diff->is_negative ) {
+        die "Error: Start date/time is later than end date/time\n"
+    }
+    return;
+}
+1;
+__END__
