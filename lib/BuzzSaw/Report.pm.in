@@ -2,6 +2,7 @@ package BuzzSaw::Report;
 use strict;
 use warnings;
 
+use BuzzSaw::DB;
 use BuzzSaw::DateTime;
 use Template;
 
