@@ -160,7 +160,6 @@ sub find_events {
     # join onto the tag table and search for events with the specified tags
 
     $attrs{join}     = 'tags';
-    $attrs{prefetch} = 'tags';
 
     $query{'tags.name'} = { -in => $self->tags };
   }
