@@ -4,17 +4,26 @@ use warnings;
 
 use Moose;
 
-with 'BuzzSaw::Report';
+extends 'BuzzSaw::Report';
+
+has '+tags' => (
+  default => sub { ['kernel'] },
+);
+
+override 'process_events' => sub {
+  my ( $self, @events ) = @_;
+
+  my %vars;
+
+  for my $event (@events) {
+    
+  }
+
+  return %vars;
+};
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
-
-sub generate {
-    my ($self) = @_;
-
-
-
-}
 
 1;
 __END__

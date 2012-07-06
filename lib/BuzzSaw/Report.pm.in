@@ -5,7 +5,7 @@ use warnings;
 use BuzzSaw::DateTime;
 use Template;
 
-use Moose::Role;
+use Moose;
 use Moose::Util::TypeConstraints;
 
 class_type('BuzzSaw::DateTime');
@@ -24,8 +24,6 @@ coerce 'BuzzSaw::DateTime'
     => from 'HashRef'
     => via { BuzzSaw::DateTime->new( time_zone => 'local', %{$_} ) };
 
-requires 'generate';
-
 has 'catalogue' => (
     is       => 'ro',
     isa      => 'BuzzSaw::DB',
@@ -35,9 +33,15 @@ has 'catalogue' => (
 );
 
 has 'template' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
+  is       => 'ro',
+  isa      => 'Str',
+  required => 1,
+  default => sub {
+    my $class = shift @_;
+    my $mod = ( split /::/, $class->meta->name )[-1];
+    my $template = lc($mod) . '.tt';
+    return $template;
+  },
 );
 
 has 'tmpldir' => (
@@ -64,7 +68,19 @@ has 'end' => (
     default  => sub { 'today' },
 );
 
-no Moose::Role;
+has 'tags' => (
+  traits    => ['Array'],
+  is        => 'ro',
+  isa       => 'ArrayRef[Str]',
+  default   => sub { [] },
+  handles   => {
+    has_tags  => 'count',
+    tags_list => 'elements',
+  },
+);
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 sub BUILD {
     my ($self) = @_;
@@ -75,5 +91,83 @@ sub BUILD {
     }
     return;
 }
+
+sub generate {
+  my ($self) = @_;
+
+  my @events = $self->find_events();
+
+  my %vars = $self->process_events(@events);
+
+  $self->process_template( \%vars, \@events );
+
+  return;
+}
+
+sub process_template {
+  my ( $self, $vars, $events ) = @_;
+
+  my $tt = Template->new(
+    {
+      INCLUDE_PATH => $self->tmpldir,
+    }
+  ) or die "$Template::ERROR\n";
+
+  $vars{events} = $events,
+  $vars{params} = {
+      start => $self->start,
+      end   => $self->end,
+      tags  => $self->tags,
+  };
+
+  $tt->process( $self->template, \%vars )
+    or die $tt->error();
+
+  return;
+}
+
+sub process_events {
+  my ( $self, @events ) = @_;
+
+  my %vars;
+
+
+  return %vars;
+}
+
+sub find_events {
+  my ($self) = @_;
+
+  my $schema = $self->catalogue->schema;
+  my $events_rs = $schema->resultset('Event');
+
+  # Find events within the required time range
+
+  my $dtf = $schema->storage->datetime_parser;
+
+  my %query = (
+    logtime => [
+      -and => { '>=', $dtf->format_datetime($self->start) },
+              { '<=', $dtf->format_datetime($self->end)   },
+    ],
+  );
+
+  my %attrs = ( order_by => 'logtime' );
+
+  if ( $self->has_tags ) {
+
+    # join onto the tag table and search for events with the specified tags
+
+    $attrs{join}     = 'tags';
+    $attrs{prefetch} = 'tags';
+
+    $query{'tags.name'} = { -in => $self->tags };
+  }
+
+  my @events = $events_rs->search( \%query, \%attrs );
+
+  return @events;
+}
+
 1;
 __END__
