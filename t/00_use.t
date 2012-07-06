@@ -18,3 +18,9 @@ use_ok 'BuzzSaw::DB';
 
 use_ok 'BuzzSaw::Importer';
 
+use_ok 'BuzzSaw::DateTime';
+
+use_ok 'BuzzSaw::Report';
+
+use_ok 'BuzzSaw::Report::Kernel';
+

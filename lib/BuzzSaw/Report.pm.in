@@ -113,7 +113,7 @@ sub process_template {
     }
   ) or die "$Template::ERROR\n";
 
-  $vars{events} = $events,
+  $vars{events} = $events;
   $vars{params} = {
       start => $self->start,
       end   => $self->end,
