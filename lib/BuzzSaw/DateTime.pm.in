@@ -12,6 +12,9 @@ sub from_date_string {
 
     my $now = $class->now();
 
+    # Ensure we are using the current local timezone
+    $now->set_time_zone('local');
+
     my $dt;
     if ( $date_string eq 'now' ) {
         $dt = $now;
@@ -35,10 +38,8 @@ sub from_date_string {
     } else { # throw it at Date::Parse
         my $time_from_epoch = Date::Parse::str2time($date_string);
         $dt = $class->from_epoch( epoch => $time_from_epoch );
+        $dt->set_time_zone('local');
     }
-
-    # Ensure we are using the current local timezone
-    $dt->set_time_zone('local');
 
     return $dt;
 }
