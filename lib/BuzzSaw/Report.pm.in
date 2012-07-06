@@ -113,14 +113,14 @@ sub process_template {
     }
   ) or die "$Template::ERROR\n";
 
-  $vars{events} = $events;
-  $vars{params} = {
+  $vars->{events} = $events;
+  $vars->{params} = {
       start => $self->start,
       end   => $self->end,
       tags  => $self->tags,
   };
 
-  $tt->process( $self->template, \%vars )
+  $tt->process( $self->template, $vars )
     or die $tt->error();
 
   return;
