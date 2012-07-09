@@ -1,0 +1,16 @@
+package App::BuzzSaw;
+use strict;
+use warnings;
+
+use Moose;
+
+extends qw(MooseX::App::Cmd);
+
+use constant plugin_search_path => 'BuzzSaw::Cmd';
+use constant allow_any_unambiguous_abbrev => 1;
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
+1;
+__END__

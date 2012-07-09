@@ -1,0 +1,46 @@
+package BuzzSaw::Cmd::Import;
+use strict;
+use warnings;
+
+use BuzzSaw::DB;
+use BuzzSaw::DataSource::Files;
+use BuzzSaw::Filter::Kernel;
+use BuzzSaw::Importer;
+
+use Moose;
+
+extends 'BuzzSaw::Cmd';
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+sub execute {
+  my ( $self, $opt, $args ) = @_;
+
+  my $db = BuzzSaw::DB->new( name => 'logstore',
+                             user => 'logtest',
+                             pass => 'l0gtest' );
+
+  my $source = BuzzSaw::DataSource::Files->new(
+    parser      => 'RFC3339',
+    names       => [qr/^.*\.log(-\d+)?$/],
+    directories => [@ARGV],
+    recursive   => 1,
+  );
+
+  my $kernel_filter = BuzzSaw::Filter::Kernel->new();
+
+  my $importer = BuzzSaw::Importer->new(
+    sources   => [$source],
+    filters   => [ $kernel_filter ],
+    catalogue => $db,
+  );
+
+  $importer->import_events;
+
+  return;
+}
+
+
+1;
+__END__

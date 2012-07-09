@@ -1,0 +1,14 @@
+package BuzzSaw::App;
+use strict;
+use warnings;
+
+use Moose;
+
+extends qw(MooseX::App::Cmd::Command);
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+
+1;
+__END__
