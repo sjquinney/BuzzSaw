@@ -1,6 +1,26 @@
 2012-07-09  SVN: new release
 
-	* Release: 0.3.0
+	* Release: 0.4.0
+
+2012-07-09 13:21  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Reporter.pm.in, t/00_use.t: Added module to
+	  run sets of reports each hour/day/week/month
+
+2012-07-09 13:21  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Added basic support for sending reports
+	  via email
+
+2012-07-09 13:20  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DateTime.pm.in: Added support for seconds since unix
+	  epoch. Reworked general string parsing to use
+	  Date::Parse::strptime which allows us to preserve any timezone
+
+2012-07-09 08:58  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.3.0
 
 2012-07-09 08:58  squinney@INF.ED.AC.UK
 
