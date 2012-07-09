@@ -124,6 +124,9 @@ sub import_events {
                 }
                 $event{logtime} = DateTime->new( %date );
 
+                # Store all event timestamps in UTC
+                $event{logtime}->set_time_zone('UTC');
+
                 $catalogue->register_event(\%event);
             }
 
