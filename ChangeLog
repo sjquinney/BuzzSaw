@@ -1,6 +1,146 @@
-2012-07-02  SVN: new release
+2012-07-09  SVN: new release
 
-	* Release: 0.2.1
+	* Release: 0.3.0
+
+2012-07-09 08:58  squinney@INF.ED.AC.UK
+
+	* Build.PL.in, BuzzSaw.spec, lcfg.yml: Added support for installing
+	  the templates into the package
+
+2012-07-09 08:58  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in, lib/BuzzSaw/Report/Kernel.pm.in,
+	  templates, templates/reports, templates/reports/kernel.tt:
+	  Completed the basics of the report generating framework. The
+	  kernel events report now works.
+
+2012-07-06 15:38  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DateTime.pm.in: fixed timezone handling
+
+2012-07-06 15:08  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Do not prefetch tags for each event as
+	  it messes things up at a later stage
+
+2012-07-06 14:49  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Kernel.pm.in: process the events into separate
+	  sets based on the tag names
+
+2012-07-06 14:28  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Need to load the BuzzSaw::DB module
+
+2012-07-06 14:23  squinney@INF.ED.AC.UK
+
+	* t/00_use.t: Now 10 tests
+
+2012-07-06 14:22  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Need to use references to vars hash
+
+2012-07-06 14:21  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in, t/00_use.t: Fixed typo, added basic
+	  compilation tests for new modules
+
+2012-07-06 14:19  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in, lib/BuzzSaw/Report/Kernel.pm.in:
+	  Further work on the report generation process
+
+2012-07-06 12:05  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Report, lib/BuzzSaw/Report.pm.in,
+	  lib/BuzzSaw/Report/Kernel.pm.in: Made a start on a report
+	  generator framework
+
+2012-07-06 12:05  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DateTime.pm.in: Added new module to handle dates.
+	  This is a sub-class of the DateTime module with one extra method,
+	  named from_date_string, which can parse various extra date
+	  strings which are supported by the Linux audit framework
+
+2012-07-06 12:04  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Added support for setting attributes from a
+	  configuration file using MooseX::SimpleConfig
+
+2012-07-04 15:40  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Removed debug code to make
+	  things quieter
+
+2012-07-04 15:37  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Removed debug code to make things quieter
+
+2012-07-04 15:25  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Added missing schema variable
+
+2012-07-04 15:24  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Reworked check_log_seen to work directly
+	  with the DBI layer. This should make things quicker
+
+2012-07-04 15:18  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Parser/RFC3339.pm.in: Completely reworked
+	  the parser. This should be correct more of the time and it's
+	  better at guessing the name/pid for programs. It should also be
+	  slightly faster as the regular expressions are no longer
+	  recompiled on every call to the subroutine.
+
+2012-07-02 16:32  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Adjusted some debugging so it is clearer
+	  why a file is not going to be processed
+
+2012-07-02 16:25  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DataSource/Files.pm.in: Fixed scoping issue in the
+	  _next_filename method
+
+2012-07-02 16:14  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: changed order in BUILD to
+	  avoid files list being unnecessarily calculated twice
+
+2012-07-02 16:04  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Reworked the way the next
+	  filename in the list is selected so that more work is done in a
+	  single query in the DB. This is cleaner and should be more
+	  efficient
+
+2012-07-02 16:01  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: reworked the start_processing method to use
+	  the new version of the register_current_processing DB function
+
+2012-07-02 15:58  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: altered the register_current_processing function so
+	  that it also does the checking of the previously seen logs table,
+	  this should be safer and more efficient
+
+2012-07-02 15:10  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Randomised the order of the
+	  files found to try and make things slightly more efficient
+
+2012-07-02 14:48  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Allow perl regexps to be used
+	  for matching the file names
+
+2012-07-02 10:20  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.2.1
 
 2012-07-02 10:20  squinney@INF.ED.AC.UK
 
