@@ -4,7 +4,8 @@ use warnings;
 
 use BuzzSaw::DB;
 use BuzzSaw::DateTime;
-use Template;
+use MIME::Lite ();
+use Template ();
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -31,6 +32,38 @@ has 'catalogue' => (
     required => 1,
     default  => sub { BuzzSaw::DB->new_with_config() },
     lazy     => 1,
+);
+
+has 'name' => (
+  is       => 'ro',
+  isa      => 'Str',
+  required => 1,
+  default => sub {
+    my $class = shift @_;
+    my $name = ( split /::/, $class->meta->name )[-1];
+    return $name;
+  },
+);
+
+has 'email_to' => (
+  is        => 'ro',
+  isa       => 'Str',
+  predicate => 'send_by_email',
+);
+
+has 'email_from' => (
+  is        => 'ro',
+  isa       => 'Str',
+  predicate => 'has_email_from',
+);
+
+has 'email_subject' => (
+  is       => 'ro',
+  isa      => 'Str',
+  default  => sub { my $self = shift @_;
+                    'BuzzSaw Report - ' . $self->name },
+  required => 1,
+  lazy     => 1,
 );
 
 has 'template' => (
@@ -100,7 +133,36 @@ sub generate {
 
   my %results = $self->process_events(@events);
 
-  $self->process_template( \%results, \@events );
+  my $text = $self->process_template( \%results, \@events );
+
+  if ( $self->send_by_email ) {
+    $self->send_email($text);
+  } else {
+    print $text;
+  }
+
+  return;
+}
+
+sub send_email {
+  my ( $self, $text ) = @_;
+
+  my @args = (
+    To       => $self->email_to,
+    Subject  => $self->email_subject,
+    Data     => $text,
+  );
+
+  if ( $self->has_email_from ) {
+    push @args, ( From => $self->email_from );
+  }
+
+  my $msg = MIME::Lite->new(@args);
+
+  my $send_ok = $msg->send();
+  if ( !$send_ok ) {
+    warn "Failed to send report email";
+  }
 
   return;
 }
@@ -124,10 +186,11 @@ sub process_template {
     },
   );
 
-  $tt->process( $self->template, \%vars )
+  my $output;
+  $tt->process( $self->template, \%vars, \$output )
     or die $tt->error();
 
-  return;
+  return $output;
 }
 
 sub process_events {
