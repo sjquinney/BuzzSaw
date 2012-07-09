@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use_ok 'BuzzSaw::Parser::RFC3339';
 
@@ -24,3 +24,4 @@ use_ok 'BuzzSaw::Report';
 
 use_ok 'BuzzSaw::Report::Kernel';
 
+use_ok 'BuzzSaw::Reporter';
