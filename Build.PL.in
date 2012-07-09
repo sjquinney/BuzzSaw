@@ -2,7 +2,14 @@
 use strict;
 use warnings;
 
-use Module::Build; # -*-perl-*-
+use Module::Build;
+
+my %templates;
+eval {
+  use File::Find::Rule;
+  %templates = map { $_ => $_ } File::Find::Rule->file->name('*.tt')->in('templates');
+  warn "template: $_\n" for keys %templates;
+};
 
 my $build = Module::Build->new(
     module_name   => '@LCFG_FULLNAME@',
@@ -15,7 +22,6 @@ my $build = Module::Build->new(
         'DBIx::Class'               => '0.08196',
         'Digest::SHA'               => 0,
         'File::Find::Rule'          => 0,
-        'File::LibMagic'            => 0,
         'IO::Uncompress::Bunzip2'   => '2.020',
         'IO::Uncompress::Gunzip'    => '2.020',
         'List::MoreUtils'           => 0,
@@ -27,9 +33,14 @@ my $build = Module::Build->new(
     },
     build_requires => {
         'Test::More'        => '0.87',
+        'File::Find::Rule'  => 0,
+    },
+    templates_files => \%templates,
+    install_path => {
+      templates => '/usr/share/buzzsaw/templates',
     },
     add_to_cleanup => [ 'MANIFEST.bak', 'ChangeLog.bak' ],
     create_makefile_pl => 'traditional',
 );
-
+$build->add_build_element('templates');
 $build->create_build_script;

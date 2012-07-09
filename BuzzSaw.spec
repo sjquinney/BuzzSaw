@@ -18,6 +18,7 @@ BuildRequires:  perl(Moose)
 BuildRequires:  perl(MooseX::Types)
 BuildRequires:  perl(Readonly)
 BuildRequires:  perl(UNIVERSAL::require)
+BuildRequires:  perl(MooseX::SimpleConfig)
 
 %description
 @LCFG_ABSTRACT@
@@ -45,7 +46,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %doc ChangeLog
 %doc %{_mandir}/man3/*
 %{perl_vendorlib}/BuzzSaw
-
+/usr/share/buzzsaw/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
