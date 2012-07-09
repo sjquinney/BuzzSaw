@@ -98,15 +98,15 @@ sub generate {
 
   my @events = $self->find_events();
 
-  my %vars = $self->process_events(@events);
+  my %results = $self->process_events(@events);
 
-  $self->process_template( \%vars, \@events );
+  $self->process_template( \%results, \@events );
 
   return;
 }
 
 sub process_template {
-  my ( $self, $vars, $events ) = @_;
+  my ( $self, $results, $events ) = @_;
 
   my $tt = Template->new(
     {
@@ -114,14 +114,17 @@ sub process_template {
     }
   ) or die "$Template::ERROR\n";
 
-  $vars->{events} = $events;
-  $vars->{params} = {
+  my %vars = (
+    results => $results,
+    events  => $events,
+    params  => {
       start => $self->start,
       end   => $self->end,
       tags  => $self->tags,
-  };
+    },
+  );
 
-  $tt->process( $self->template, $vars )
+  $tt->process( $self->template, \%vars )
     or die $tt->error();
 
   return;
