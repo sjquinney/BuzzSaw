@@ -35,10 +35,24 @@ sub from_date_string {
     } elsif ( $date_string eq 'week-ago' ) {
         my $dur = DateTime::Duration->new( days => 7 );
         $dt = $now - $dur;
-    } else { # throw it at Date::Parse
-        my $time_from_epoch = Date::Parse::str2time($date_string);
-        $dt = $class->from_epoch( epoch => $time_from_epoch );
+    } elsif ( $date_string =~ m/^\d+$/ ) {
+        $dt = $class->from_epoch( epoch => $date_string );
         $dt->set_time_zone('local');
+    } else { # throw it at Date::Parse
+        my ( $ss, $mm, $hh, $day, $month, $year, $zone )
+          = Date::Parse::strptime($date_string);
+        $zone //= 'local';
+        $month += 1; # Date::Parse counts from zero
+        $year  += 1900;
+
+        $dt = $class->new( second    => int($ss),
+                           minute    => $mm,
+                           hour      => $hh,
+                           day       => $day,
+                           month     => $month,
+                           year      => $year,
+                           time_zone => $zone );
+
     }
 
     return $dt;
