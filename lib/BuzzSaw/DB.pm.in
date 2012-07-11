@@ -15,7 +15,7 @@ use BuzzSaw::DB::Schema;
 use Moose;
 use MooseX::Types::Moose qw(Int Maybe Str);
 
-with 'BuzzSaw::Catalogue', 'MooseX::Log::Log4perl', 'MooseX::SimpleConfig';
+with 'MooseX::Log::Log4perl', 'MooseX::SimpleConfig';
 
 has '+configfile' => (
   default => sub { return '/etc/buzzsaw/db.yaml' },
