@@ -10,6 +10,7 @@ our $VERSION = '@LCFG_VERSION@';
 # $HeadURL$
 # $Date$
 
+use BuzzSaw::Types qw(BuzzSawDB);
 use DateTime;
 
 use Moose;
@@ -37,10 +38,12 @@ has 'filters' => (
     },
 );
 
-has 'catalogue' => (
-    does     => 'BuzzSaw::Catalogue',
-    is       => 'ro',
-    required => 1,
+has 'db' => (
+  is      => 'rw',
+  isa     => BuzzSawDB,
+  lazy    => 1,
+  default => sub { require BuzzSaw::DB;
+                   BuzzSaw::DB->new_with_config() }
 );
 
 has 'readall' => (
@@ -55,7 +58,7 @@ __PACKAGE__->meta->make_immutable;
 sub import_events {
     my ($self) = @_;
 
-    my $catalogue = $self->catalogue;
+    my $db = $self->db;
 
     my @filters = $self->list_filters;
 
@@ -69,7 +72,7 @@ sub import_events {
     for my $source ( $self->list_sources ) {
 
         $source->readall(1) if $self->readall;
-        $source->catalogue($catalogue);
+        $source->db($db);
 
         $source->reset();
 
@@ -85,7 +88,7 @@ sub import_events {
 
             my %event = ( raw => $entry, digest => $digest );
 
-            my $seen = $self->catalogue->check_event_seen(\%event);
+            my $seen = $self->db->check_event_seen(\%event);
 
             if ($seen) {
                 next;
@@ -127,7 +130,7 @@ sub import_events {
                 # Store all event timestamps in UTC
                 $event{logtime}->set_time_zone('UTC');
 
-                $catalogue->register_event(\%event);
+                $db->register_event(\%event);
             }
 
         }
@@ -147,7 +150,7 @@ BuzzSaw::Importer -
 
 This documentation refers to BuzzSaw::Importer version @LCFG_VERSION@
 
-=head1 USAGE
+=head1 SYNOPSIS
 
 =head1 DESCRIPTION
 

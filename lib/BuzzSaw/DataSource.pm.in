@@ -10,40 +10,31 @@ our $VERSION = '@LCFG_VERSION@';
 # $HeadURL$
 # $Date$
 
-use UNIVERSAL::require;
-
 use Moose::Role;
-use Moose::Util::TypeConstraints;
+
 use MooseX::Types::Moose qw(Bool);
+use BuzzSaw::Types qw(BuzzSawDB BuzzSawParser);
 
 requires 'next_entry', 'reset';
 
-subtype 'BuzzSawParser' => as role_type('BuzzSaw::Parser');
-coerce 'BuzzSawParser'
-    => from 'Str'
-    => via { my $module = $_;
-             if ( $module !~ m/^BuzzSaw::Parser::/ ) {
-                 $module = 'BuzzSaw::Parser::' . $module;
-             }
-             $module->require or die $UNIVERSAL::require::ERROR;
-             return $module->new()
-            };
-
-has 'catalogue' => (
-    does => 'BuzzSaw::Catalogue',
-    is   => 'rw',
+has 'db' => (
+  is      => 'rw',
+  isa     => BuzzSawDB,
+  lazy    => 1,
+  default => sub { require BuzzSaw::DB;
+                   BuzzSaw::DB->new_with_config() }
 );
 
 has 'parser' => (
-    isa      => 'BuzzSawParser',
     is       => 'ro',
+    isa      => BuzzSawParser,
     coerce   => 1,
     required => 1,
 );
 
 has 'readall' => (
-    isa     => Bool,
     is      => 'rw',
+    isa     => Bool,
     default => 0,
 );
 

@@ -33,7 +33,7 @@ sub execute {
   my $importer = BuzzSaw::Importer->new(
     sources   => [$source],
     filters   => [ $kernel_filter ],
-    catalogue => $db,
+    db        => $db,
   );
 
   $importer->import_events;

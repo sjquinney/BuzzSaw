@@ -4,6 +4,8 @@ use warnings;
 
 use BuzzSaw::DB;
 use BuzzSaw::DateTime;
+use BuzzSaw::Types qw(BuzzSawDB);
+
 use MIME::Lite ();
 use Template ();
 
@@ -26,12 +28,12 @@ coerce 'BuzzSaw::DateTime'
     => from 'HashRef'
     => via { BuzzSaw::DateTime->new( time_zone => 'local', %{$_} ) };
 
-has 'catalogue' => (
-    is       => 'ro',
-    isa      => 'BuzzSaw::DB',
-    required => 1,
-    default  => sub { BuzzSaw::DB->new_with_config() },
-    lazy     => 1,
+has 'db' => (
+  is      => 'rw',
+  isa     => BuzzSawDB,
+  lazy    => 1,
+  default => sub { require BuzzSaw::DB;
+                   BuzzSaw::DB->new_with_config() }
 );
 
 has 'name' => (
@@ -205,7 +207,7 @@ sub process_events {
 sub find_events {
   my ($self) = @_;
 
-  my $schema = $self->catalogue->schema;
+  my $schema = $self->db->schema;
   my $events_rs = $schema->resultset('Event');
 
   # Find events within the required time range

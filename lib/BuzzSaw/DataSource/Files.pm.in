@@ -172,11 +172,11 @@ sub _next_fh {
     if ( defined $current_fh ) {
         my $current_file   = $self->_current_filename;
         my $current_digest = $self->_current_digest;
-        $self->catalogue->register_log( $current_file, $current_digest );
+        $self->db->register_log( $current_file, $current_digest );
 
-        $self->catalogue->end_transaction();
+        $self->db->end_transaction();
 
-        $self->catalogue->end_processing($current_file);
+        $self->db->end_processing($current_file);
 
         $current_fh->close;
     }
@@ -220,7 +220,7 @@ sub _next_fh {
     $self->_current_fh($new_fh);
 
     if ( defined $new_fh ) {
-      $self->catalogue->begin_transaction();
+      $self->db->begin_transaction();
     }
 
     return $new_fh;
@@ -250,7 +250,7 @@ sub _next_free_filename {
 
   my $can_start = 0;
   while ( defined $file && !$can_start ) {
-      $can_start = $self->catalogue->start_processing( $file, $digest,
+      $can_start = $self->db->start_processing( $file, $digest,
                                                        $self->readall );
 
     if ( !$can_start ) {
@@ -319,7 +319,7 @@ BuzzSaw::DataSource -
 
 This documentation refers to BuzzSaw::DataSource version @LCFG_VERSION@
 
-=head1 USAGE
+=head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
