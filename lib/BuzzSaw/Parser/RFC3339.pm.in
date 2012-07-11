@@ -2,6 +2,12 @@ package BuzzSaw::Parser::RFC3339; # -*-perl-*-
 use strict;
 use warnings;
 
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
 our $VERSION = '@LCFG_VERSION@';
 
 use Readonly;
@@ -9,12 +15,6 @@ use Readonly;
 use Moose;
 
 with 'BuzzSaw::Parser', 'MooseX::Log::Log4perl';
-
-# $Id$
-# $Source:$
-# $Revision$
-# $HeadURL$
-# $Date$
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
@@ -108,39 +108,67 @@ __END__
 
 =head1 NAME
 
-BuzzSaw::Parser::RFC3339 - 
+BuzzSaw::Parser::RFC3339 - BuzzSaw parser for log entries with the RFC3339 dates
 
 =head1 VERSION
 
 This documentation refers to BuzzSaw::Parser::RFC3339 version @LCFG_VERSION@
 
-=head1 USAGE
+=head1 SYNOPSIS
+
+use BuzzSaw::Parser::RFC3339;
+
+my $parser = BuzzSaw::Parser::RFC3339->new();
+
+while (defined (my $line = $fh->getline) ) {
+  my %event = $parser->parse_line($line);
+}
 
 =head1 DESCRIPTION
 
-=head1 REQUIRED ARGUMENTS
+This is a Moose class which provides a parser which implements the
+BuzzSaw::Parser role. It can handle log entries that use the RFC3339
+date format. The parser splits a line into separate parts, e.g. date,
+program, pid, message.
 
-=head1 OPTIONS
+The BuzzSaw project provides a suite of tools for processing log file
+entries. Entries in files are parsed and filtered into a set of events
+of interest which are stored in a database. A report generation
+framework is also available which makes it easy to generate regular
+reports regarding the events discovered.
 
-=over 4
+=head1 ATTRIBUTES
 
-=item
+There are no attributes in this class.
+
+=head1 SUBROUTINES/METHODS
+
+=over
+
+=item %results = $parser->parse_line($log_entry)
+
+This method takes a log entry line as a string and returns a hash
+which contains the details of the various parts of the entry.
+
+The following date and time attributes will be specified in the
+returned hash: C<year>, C<month>, C<day>, C<hour>, C<minute>,
+C<second>. If a time-zone is specified in the log entry it will be
+returned with the key C<time_zone>. These field names match with the
+L<DateTime> attributes.
+
+The C<message> attribute will always be defined (even if it is just an
+empty string). The C<program> and C<pid> attributes are optional.
 
 =back
 
-=head1 CONFIGURATION
-
-=head1 EXIT STATUS
-
-=head1 INCOMPATIBILITIES
-
-=head1 DIAGNOSTICS
-
 =head1 DEPENDENCIES
 
-This application requires
+This module is powered by L<Moose>. This module implements the
+L<BuzzSaw::Parser> Moose role.
 
 =head1 SEE ALSO
+
+L<BuzzSaw>, L<BuzzSaw::Filter>
 
 =head1 PLATFORMS
 
@@ -157,11 +185,11 @@ feedback and patches are also always very welcome.
 
 =head1 AUTHOR
 
-@LCFG_AUTHOR@
+    @LCFG_AUTHOR@
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (C) 2012 University of Edinburgh. All rights reserved.
+    Copyright (C) 2012 University of Edinburgh. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GPL, version 2 or later.

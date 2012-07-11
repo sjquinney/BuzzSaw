@@ -2,56 +2,93 @@ package BuzzSaw::Filter; # -*-perl-*-
 use strict;
 use warnings;
 
-our $VERSION = '@LCFG_VERSION@';
-
 # $Id$
 # $Source:$
 # $Revision$
 # $HeadURL$
 # $Date$
 
+our $VERSION = '@LCFG_VERSION@';
+
 use Moose::Role;
 
 requires 'check';
+
+no Moose::Role;
 
 1;
 __END__
 
 =head1 NAME
 
-BuzzSaw::Filter - 
+BuzzSaw::Filter - A Moose role which defines the BuzzSaw filter interface
 
 =head1 VERSION
 
 This documentation refers to BuzzSaw::Filter version @LCFG_VERSION@
 
-=head1 USAGE
+=head1 SYNOPSIS
+
+package BuzzSaw::Filter::Example;
+use Moose;
+
+with 'BuzzSaw::Filter';
+
+sub check {
+  my ($self, $event) = @_;
+  ...
+}
 
 =head1 DESCRIPTION
 
-=head1 REQUIRED ARGUMENTS
+This is a Moose role which is used to define the required interface
+for a BuzzSaw filter module. The filter modules are used to decide on
+whether an event is of interest and should be stored into the
+database. The module can also return a set of tags which are then
+associated with the event. For example, when an event is accepted by
+the Kernel filter module it returns a C<kernel> tag along with one of
+C<segfault>, C<oops>, C<oom> or C<panic>.
 
-=head1 OPTIONS
+The BuzzSaw project provides a suite of tools for processing log file
+entries. Entries in files are parsed and filtered into a set of events
+of interest which are stored in a database. A report generation
+framework is also available which makes it easy to generate regular
+reports regarding the events discovered.
 
-=over 4
+=head1 ATTRIBUTES
 
-=item
+There are no attributes in this role.
+
+=head1 SUBROUTINES/METHODS
+
+=over
+
+=item ( $accept, @tags ) = $filter->check(\%event)
+
+Any class which implements this role must provide an implementation of
+the C<check> method. This method will be called for every entry found
+(so make sure the code is not too slow). It takes a reference to a
+hash of event attributes produced by parsing the log entry. It returns
+a boolean which specifies whether or not the entry should be
+stored. It also, optionally, returns a list of tags which should be
+associated with the stored event.
+
+The following date and time attributes will always be defined: C<year>,
+C<month>, C<day>, C<hour>, C<minute>, C<second>, C<time_zone>.
+
+The C<message> attribute will be defined. The C<program> and C<pid>
+attributes might be defined, most entries have C<program> but far
+fewer have C<pid>, neither is guaranteed to be set.
 
 =back
 
-=head1 CONFIGURATION
-
-=head1 EXIT STATUS
-
-=head1 INCOMPATIBILITIES
-
-=head1 DIAGNOSTICS
-
 =head1 DEPENDENCIES
 
-This application requires
+This module is powered by L<Moose>.
 
 =head1 SEE ALSO
+
+L<BuzzSaw>, L<BuzzSaw::Parser>, L<BuzzSaw::Filter::Kernel>
 
 =head1 PLATFORMS
 
@@ -68,11 +105,11 @@ feedback and patches are also always very welcome.
 
 =head1 AUTHOR
 
-@LCFG_AUTHOR@
+    @LCFG_AUTHOR@
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (C) 2012 University of Edinburgh. All rights reserved.
+    Copyright (C) 2012 University of Edinburgh. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GPL, version 2 or later.
