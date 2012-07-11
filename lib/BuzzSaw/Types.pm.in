@@ -12,7 +12,8 @@ our $VERSION = '@LCFG_VERSION@';
 
 use UNIVERSAL::require;
 
-use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser BuzzSawFilter)];
+use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
+                                  BuzzSawFilter BuzzSawFilterList)];
 use MooseX::Types::Moose qw(HashRef Str);
 
 sub create_new_object {
@@ -42,6 +43,13 @@ role_type BuzzSawFilter, { role => 'BuzzSaw::Filter' };
 coerce BuzzSawFilter,
   from Str,
   via { create_new_object( 'BuzzSaw::Filter', $_ ) };
+
+subtype BuzzSawFilterList,
+  as ArrayRef[BuzzSawFilter];
+
+coerce BuzzSawFilterList,
+  from ArrayRef,
+  via { [ map { to_BuzzSawFilter($_) } @{$_} ] };
 
 # DB
 

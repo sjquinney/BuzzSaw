@@ -10,7 +10,7 @@ our $VERSION = '@LCFG_VERSION@';
 # $HeadURL$
 # $Date$
 
-use BuzzSaw::Types qw(BuzzSawDB);
+use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList);
 use DateTime;
 
 use Moose;
@@ -19,37 +19,42 @@ use MooseX::Types::Moose qw(Bool);
 with 'MooseX::Log::Log4perl';
 
 has 'sources' => (
-    traits   => ['Array'],
-    isa      => 'ArrayRef[BuzzSaw::DataSource]',
-    is       => 'ro',
-    required => 1,
-    handles  => {
-        'list_sources' => 'elements',
-    },
+  traits   => ['Array'],
+  isa      => 'ArrayRef[BuzzSaw::DataSource]',
+  is       => 'ro',
+  required => 1,
+  handles  => {
+    'list_sources' => 'elements',
+  },
 );
 
 has 'filters' => (
-    traits   => ['Array'],
-    isa      => 'ArrayRef[BuzzSaw::Filter]',
-    is       => 'ro',
-    required => 1,
-    handles  => {
-        'list_filters' => 'elements',
-    },
+  traits   => ['Array'],
+  is       => 'ro',
+  isa      => BuzzSawFilterList,
+  coerce   => 1,
+  required => 1,
+  lazy     => 1,
+  default  => sub { [] },
+  handles  => {
+    'list_filters' => 'elements',
+  },
 );
 
 has 'db' => (
-  is      => 'rw',
-  isa     => BuzzSawDB,
-  lazy    => 1,
-  default => sub { require BuzzSaw::DB;
-                   BuzzSaw::DB->new_with_config() }
+  is       => 'rw',
+  isa      => BuzzSawDB,
+  coerce   => 1,
+  required => 1,
+  lazy     => 1,
+  default  => sub { require BuzzSaw::DB;
+                    BuzzSaw::DB->new_with_config() }
 );
 
 has 'readall' => (
-    isa     => Bool,
-    is      => 'ro',
-    default => 0,
+  is      => 'ro',
+  isa     => Bool,
+  default => 0,
 );
 
 no Moose;
