@@ -1,12 +1,37 @@
-package BuzzSaw::DB::Schema::Result::Log;
+package BuzzSaw::DB::Schema::Result::Log; # -*-perl-*-
 use strict;
 use warnings;
+
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
 
 use base 'DBIx::Class::Core';
 
 =head1 NAME
 
-BuzzSaw::DB::Schema::Result::Log
+BuzzSaw::DB::Schema::Result::Log - BuzzSaw DBIx::Class resultset
+
+=head1 VERSION
+
+This documentation refers to BuzzSaw::DB::Schema::Result::Log version @LCFG_VERSION@
+
+=head1 DESCRIPTION
+
+This module provides access to the DBIx::Class resultset for the
+C<log> table in the BuzzSaw database. This table records the log files
+which have been processed along with their SHA digest.  For efficiency
+reasons this is used to avoid parsing a file multiple times.
+
+The BuzzSaw project provides a suite of tools for processing log file
+entries. Entries in files are parsed and filtered into a set of events
+of interest which are stored in a database. A report generation
+framework is also available which makes it easy to generate regular
+reports regarding the events discovered.
 
 =cut
 
@@ -65,3 +90,38 @@ __PACKAGE__->add_unique_constraint( 'name_digest', ['name', 'digest'] );
 __PACKAGE__->add_unique_constraint( 'log_digest_key', ['digest'] );
 
 1;
+__END__
+
+=head1 DEPENDENCIES
+
+This module requires L<DBIx::Class>.
+
+=head1 SEE ALSO
+
+L<BuzzSaw::DB>, L<BuzzSaw::DB::Schema>
+
+=head1 PLATFORMS
+
+This is the list of platforms on which we have tested this
+software. We expect this software to work on any Unix-like platform
+which is supported by Perl.
+
+@LCFG_PLATFORMS@
+
+=head1 BUGS AND LIMITATIONS
+
+Please report any bugs or problems (or praise!) to bugs@lcfg.org,
+feedback and patches are also always very welcome.
+
+=head1 AUTHOR
+
+    @LCFG_AUTHOR@
+
+=head1 LICENSE AND COPYRIGHT
+
+    Copyright (C) 2012 University of Edinburgh. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the terms of the GPL, version 2 or later.
+
+=cut
