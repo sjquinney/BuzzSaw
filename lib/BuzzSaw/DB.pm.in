@@ -424,11 +424,6 @@ false (zero) otherwise.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-This class is not normally loaded directly, instead the
-L<BuzzSaw::DB> module has support for retrieving the database
-configuration parameters from a configuration file, see that module
-for details.
-
 The BuzzSaw database schema is only known to work with PostgreSQL,
 reports of success with other database types (or patches to add the
 necessary support) would be very welcome.
