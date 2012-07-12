@@ -46,6 +46,8 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %doc ChangeLog
 %doc %{_mandir}/man3/*
 %{perl_vendorlib}/BuzzSaw
+%{perl_vendorlib}/App/*
+%{_bindir}/*
 /usr/share/buzzsaw/
 
 %clean
