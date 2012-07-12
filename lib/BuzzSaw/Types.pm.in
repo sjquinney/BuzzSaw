@@ -65,7 +65,7 @@ coerce BuzzSawDB,
   via { BuzzSaw::DB->new_with_config($_) };
 
 coerce BuzzSawDB,
-  from HashRef
+  from HashRef,
   via { BuzzSaw::DB->new($_) };
 
 # DataSource
