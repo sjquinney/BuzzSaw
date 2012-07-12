@@ -58,7 +58,7 @@ coerce BuzzSawFilterList,
 
 # DB
 
-class_type BuzzSawDB, { class => 'BuzzSaw::DB' }
+class_type BuzzSawDB, { class => 'BuzzSaw::DB' };
 
 coerce BuzzSawDB,
   from Str,
