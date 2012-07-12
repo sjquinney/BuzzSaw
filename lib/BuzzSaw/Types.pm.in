@@ -77,14 +77,14 @@ coerce BuzzSawDataSource,
   via { create_new_object( 'BuzzSaw::DataSource', $_ ) };
 
 coerce BuzzSawDataSource,
-  from ArrayRef
+  from ArrayRef,
   via { create_new_object( 'BuzzSaw::DataSource', @{$_} ) };
 
 subtype BuzzSawDataSourceList,
   as ArrayRef[BuzzSawDataSource];
 
 coerce BuzzSawDataSourceList,
-  from ArrayRef
+  from ArrayRef,
   via { [ map { to_BuzzSawDataSource($_) } @{$_} ] };
 
 1;
