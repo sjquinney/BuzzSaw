@@ -10,18 +10,24 @@ our $VERSION = '@LCFG_VERSION@';
 # $HeadURL$
 # $Date$
 
-use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList);
-use DateTime;
+use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList BuzzSawDataSourceList);
+use DateTime ();
+use Digest::SHA ();
+
+use Readonly;
+
+Readonly my @DATETIME_FIELDS => qw/year month day hour minute second nanosecond time_zone/;
 
 use Moose;
 use MooseX::Types::Moose qw(Bool);
 
-with 'MooseX::Log::Log4perl';
+with 'MooseX::Log::Log4perl', 'MooseX::SimpleConfig';
 
 has 'sources' => (
   traits   => ['Array'],
-  isa      => 'ArrayRef[BuzzSaw::DataSource]',
+  isa      => BuzzSawDataSourceList,
   is       => 'ro',
+  coerce   => 1,
   required => 1,
   handles  => {
     'list_sources' => 'elements',
@@ -38,6 +44,7 @@ has 'filters' => (
   default  => sub { [] },
   handles  => {
     'list_filters' => 'elements',
+    'has_filters'  => 'count',
   },
 );
 
@@ -61,87 +68,94 @@ no Moose;
 __PACKAGE__->meta->make_immutable;
 
 sub import_events {
-    my ($self) = @_;
+  my ($self) = @_;
 
-    my $db = $self->db;
+  my $db = $self->db;
 
-    my @filters = $self->list_filters;
+  my @filters = $self->list_filters;
 
-    # If there are no filters we will accept ALL entries
+  # If there are no filters we will accept ALL entries
 
-    my $accept_default = scalar @filters > 0 ? 0 : 1;
+  my $accept_default = $self->has_filters ? 0 : 1;
 
-    my $examined_count = 0;
-    my $accepted_count = 0;
+  my $examined_count = 0;
+  my $accepted_count = 0;
 
-    for my $source ( $self->list_sources ) {
+  for my $source ( $self->list_sources ) {
 
-        $source->readall(1) if $self->readall;
-        $source->db($db);
+    $source->readall(1) if $self->readall;
+    $source->db($db);
 
-        $source->reset();
+    $source->reset();
 
-        while ( defined ( my $entry = $source->next_entry) ) {
-            $examined_count++;
+    while ( defined ( my $entry = $source->next_entry ) ) {
+      $examined_count++;
 
-            # ignore empty entries
-            if ( $entry =~ m/^\s*$/ ) {
-                next;
+      # ignore empty entries
+      if ( $entry =~ m/^\s*$/ ) {
+        next;
+      }
+
+      my $digest = Digest::SHA::sha256_base64($entry);
+
+      my %event = ( raw => $entry, digest => $digest );
+
+      my $seen = $self->db->check_event_seen(\%event);
+
+      if ($seen) {
+        next;
+      }
+
+      # Parsing
+
+      my %results = $source->parser->parse_line($entry);
+
+      %event = ( %results, %event );
+
+      # Filtering
+
+      my $accept = $accept_default;
+
+      if ( $self->has_filters ) {
+
+        my %all_tags;
+        for my $filter (@filters) {
+          my ( $result, @tags ) = $filter->check(\%event);
+          if ($result) {
+            $accept = 1;
+            for my $tag (@tags) {
+              $all_tags{$tag} = 1;
             }
-
-            my $digest = Digest::SHA::sha512_base64($entry);
-
-            my %event = ( raw => $entry, digest => $digest );
-
-            my $seen = $self->db->check_event_seen(\%event);
-
-            if ($seen) {
-                next;
-            }
-
-            # Parsing
-
-            my %results = $source->parser->parse_line($entry);
-
-            %event = ( %results, %event );
-
-            # Filtering
-
-            my $accept = $accept_default;
-
-            my %all_tags;
-            for my $filter (@filters) {
-                my ( $result, @tags ) = $filter->check(\%event);
-                if ($result) {
-                    $accept = 1;
-                    for my $tag (@tags) {
-                        $all_tags{$tag} = 1;
-                    }
-                }
-            }
-
-            $event{tags} = [keys %all_tags];
-
-            # Registering
-
-            if ($accept) {
-                $accepted_count++;
-                my %date;
-                for my $key (qw/year month day hour minute second nanosecond time_zone/) {
-                    $date{$key} = $event{$key};
-                }
-                $event{logtime} = DateTime->new( %date );
-
-                # Store all event timestamps in UTC
-                $event{logtime}->set_time_zone('UTC');
-
-                $db->register_event(\%event);
-            }
-
+          }
         }
-    }
 
-    print "Examined $examined_count entries, accepted $accepted_count\n";
+        $event{tags} = [keys %all_tags];
+      }
+
+      # Registering
+
+      if ($accept) {
+        $accepted_count++;
+
+        # Convert the various date fields into a DateTime
+        # object which DBIx::Class will format correctly for
+        # the DB.
+
+        my %date;
+        for my $key (@DATETIME_FIELDS) {
+          $date{$key} = $event{$key};
+        }
+        $event{logtime} = DateTime->new( %date );
+
+        $db->register_event(\%event);
+      }
+
+    }
+  }
+
+  print "Examined $examined_count entries, accepted $accepted_count\n";
+
+  return;
 }
 
 1;
