@@ -15,7 +15,7 @@ use UNIVERSAL::require;
 use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
                                   BuzzSawDataSource BuzzSawDataSourceList
                                   BuzzSawFilter BuzzSawFilterList)];
-use MooseX::Types::Moose qw(HashRef Str);
+use MooseX::Types::Moose qw(ArrayRef HashRef Str);
 
 sub create_new_object {
   my ( $modbase, $modname, @args ) = @_;
