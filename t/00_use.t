@@ -4,9 +4,9 @@ use warnings;
 
 use Test::More tests => 11;
 
-use_ok 'BuzzSaw::Parser::RFC3339';
+use_ok 'BuzzSaw::Types';
 
-use_ok 'BuzzSaw::Filter::Auth';
+use_ok 'BuzzSaw::Parser::RFC3339';
 
 use_ok 'BuzzSaw::Filter::Kernel';
 
