@@ -21,7 +21,7 @@ use Moose;
 use MooseX::Types::Moose qw(Bool);
 use Moose::Meta::Attribute::Native::Trait::Array;
 
-with 'BuzzSaw::DataSource', 'MooseX::Log::Log4perl';
+with 'BuzzSaw::DataSource';
 
 has 'directories' => (
     traits   => ['Array'],
