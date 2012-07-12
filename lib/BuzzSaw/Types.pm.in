@@ -13,11 +13,12 @@ our $VERSION = '@LCFG_VERSION@';
 use UNIVERSAL::require;
 
 use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
+                                  BuzzSawDataSource BuzzSawDataSourceList
                                   BuzzSawFilter BuzzSawFilterList)];
 use MooseX::Types::Moose qw(HashRef Str);
 
 sub create_new_object {
-  my ( $modbase, $modname ) = @_;
+  my ( $modbase, $modname, @args ) = @_;
 
   if ( $modname !~ m/^\Q$modbase\E::/ ) {
     $modname = join '::', $modbase, $modname;
@@ -25,7 +26,11 @@ sub create_new_object {
 
   $modname->require or die $UNIVERSAL::require::ERROR;
 
-  return $modname->new();
+  if ( scalar @args == 1 && ref $args[0] eq 'ARRAY' ) {
+    @args = @{$args[0]};
+  }
+
+  return $modname->new(@args);
 }
 
 # Parser
@@ -62,6 +67,25 @@ coerce BuzzSawDB,
 coerce BuzzSawDB,
   from HashRef
   via { BuzzSaw::DB->new($_) };
+
+# DataSource
+
+role_type BuzzSawDataSource, { role => 'BuzzSaw::DataSource' };
+
+coerce BuzzSawDataSource,
+  from Str,
+  via { create_new_object( 'BuzzSaw::DataSource', $_ ) };
+
+coerce BuzzSawDataSource,
+  from ArrayRef
+  via { create_new_object( 'BuzzSaw::DataSource', @{$_} ) };
+
+subtype BuzzSawDataSourceList,
+  as ArrayRef[BuzzSawDataSource];
+
+coerce BuzzSawDataSourceList,
+  from ArrayRef
+  via { [ map { to_BuzzSawDataSource($_) } @{$_} ] };
 
 1;
 __END__
