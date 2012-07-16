@@ -12,7 +12,6 @@ our $VERSION = '@LCFG_VERSION@';
 
 use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList BuzzSawDataSourceList);
 use DateTime ();
-use Digest::SHA ();
 
 use Readonly;
 
@@ -96,7 +95,7 @@ sub import_events {
         next;
       }
 
-      my $digest = Digest::SHA::sha256_base64($entry);
+      my $digest = $source->checksum_data($entry);
 
       my %event = ( raw => $entry, digest => $digest );
 
