@@ -1,4 +1,4 @@
-package BuzzSaw::App;
+package BuzzSaw::Cmd;
 use strict;
 use warnings;
 
