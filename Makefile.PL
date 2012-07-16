@@ -18,7 +18,6 @@ WriteMakefile
                            'MooseX::Types' => '0.21',
                            'Digest::SHA' => 0,
                            'UNIVERSAL::require' => 0,
-                           'List::MoreUtils' => 0,
                            'DBIx::Class' => '0.08196',
                            'Moose' => '0.57',
                            'IO::Uncompress::Bunzip2' => '2.020'

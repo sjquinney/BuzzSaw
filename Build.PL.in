@@ -24,7 +24,6 @@ my $build = Module::Build->new(
         'File::Find::Rule'          => 0,
         'IO::Uncompress::Bunzip2'   => '2.020',
         'IO::Uncompress::Gunzip'    => '2.020',
-        'List::MoreUtils'           => 0,
         'Moose'                     => '0.57',
         'MooseX::Types'             => '0.21',
         'Readonly'                  => 0,
