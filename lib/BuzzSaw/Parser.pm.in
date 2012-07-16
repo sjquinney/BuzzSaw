@@ -61,6 +61,9 @@ There are no attributes in this role.
 
 =head1 SUBROUTINES/METHODS
 
+Any class which implements this role must provide the following
+method.
+
 =over
 
 =item %results = $parser->parse_line($log_entry)
