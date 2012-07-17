@@ -22,6 +22,10 @@ use MooseX::Types::Moose qw(Bool);
 
 with 'MooseX::Log::Log4perl', 'MooseX::SimpleConfig';
 
+has '+configfile' => (
+  default => '/etc/buzzsaw/importer.yaml',
+);
+
 has 'sources' => (
   traits   => ['Array'],
   isa      => BuzzSawDataSourceList,
