@@ -200,10 +200,6 @@ sub register_event {
 sub check_event_seen {
   my ( $self, $event ) = @_;
 
-  if ( $self->log->is_debug ) {
-    $self->log->debug("Checking if event has been seen");
-  }
-
   my $digest = $event->{digest};
 
   my $schema = $self->schema;
