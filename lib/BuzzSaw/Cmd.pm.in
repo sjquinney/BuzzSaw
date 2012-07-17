@@ -62,17 +62,19 @@ sub preflight {
     Log::Log4perl->easy_init($WARN);
   }
 
+  my $logger = Log::Log4perl::get_logger('');
+
   # The secondary checks here are so that we avoid the possibility of
   # *lowering* the logging level if something higher was set in a
   # configuration file. The intention of these options is only to
   # enable the raising of logging levels where necessary.
 
-  if ( $self->verbose && !$self->logger->is_info ) {
-    $self->logger->level($INFO);
+  if ( $self->verbose && !$logger->is_info ) {
+    $logger->level($INFO);
   }
 
-  if ( $self->debug  && !$self->logger->is_debug ) {
-    $self->logger->level($DEBUG);
+  if ( $self->debug  && !$logger->is_debug ) {
+    $logger->level($DEBUG);
   }
 
   return;
