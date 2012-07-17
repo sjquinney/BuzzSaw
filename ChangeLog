@@ -1,6 +1,14 @@
 2012-07-17  SVN: new release
 
-	* Release: 0.5.0
+	* Release: 0.5.1
+
+2012-07-17 12:50  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec: Include new man1 man pages
+
+2012-07-17 12:49  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.5.0
 
 2012-07-17 12:29  squinney@INF.ED.AC.UK
 
