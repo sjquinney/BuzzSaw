@@ -1,6 +1,160 @@
-2012-07-09  SVN: new release
+2012-07-17  SVN: new release
 
-	* Release: 0.4.0
+	* Release: 0.5.0
+
+2012-07-17 12:29  squinney@INF.ED.AC.UK
+
+	* bin/buzzsaw.in: Added usage documentation
+
+2012-07-17 11:18  squinney@INF.ED.AC.UK
+
+	* lib/App/BuzzSaw.pm.in, lib/BuzzSaw/Cmd.pm.in,
+	  lib/BuzzSaw/Cmd/Import.pm.in, lib/BuzzSaw/Importer.pm.in: Added
+	  more complete documentation
+
+2012-07-16 15:54  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Cmd/Import.pm.in, t/00_use.t: Updated to
+	  work with configuring the Importer via a file. Added a couple of
+	  useful command line options. Added a basic compilation test
+
+2012-07-16 15:26  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd.pm.in: fixed package name
+
+2012-07-16 14:43  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Allowed the parsing to fail, just log
+	  the error. Added full documentation
+
+2012-07-16 13:49  squinney@INF.ED.AC.UK
+
+	* Build.PL.in, META.yml.in, Makefile.PL, lcfg.yml: Removed
+	  requirement for List::MoreUtils which is not actually being used
+
+2012-07-16 13:48  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource/Files.pm.in: Switched to using logger
+	  methods. Added full documentation for module. Did a bit of code
+	  tidying
+
+2012-07-16 13:48  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Used new checksum_data method to
+	  compute digest
+
+2012-07-16 13:47  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource.pm.in: Added new checksum methods to
+	  return SHA-256 digests for files and data. Added full
+	  documentation for the module
+
+2012-07-16 13:46  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Parser.pm.in: Small docs tweak
+
+2012-07-12 15:28  squinney@INF.ED.AC.UK
+
+	* t/00_use.t: Removed test for Auth filter which was deleted
+
+2012-07-12 15:24  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Switched to using the new
+	  BuzzSawDataSourceList type. Tidied the code a bit more
+
+2012-07-12 15:24  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DataSource.pm.in, lib/BuzzSaw/DataSource/Files.pm.in:
+	  Added support for loading attributes from a configuration files
+
+2012-07-12 14:46  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec: added new files to specfile
+
+2012-07-12 14:45  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: Need to include the ArrayRef moose type
+
+2012-07-12 14:43  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: added missing commas
+
+2012-07-12 14:42  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: added missing commas
+
+2012-07-12 14:41  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: added missing semi-colon
+
+2012-07-12 14:40  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: Add DataSource type and various
+	  coercions. Also added DataSource List type which should make it
+	  possible to load objects using info stored in yaml config files
+
+2012-07-11 16:37  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in, lib/BuzzSaw/Types.pm.in: Converted
+	  the list of filters to the new BuzzSawFilterList type so that we
+	  can easily load them by name
+
+2012-07-11 15:04  squinney@INF.ED.AC.UK
+
+	* lib/App/BuzzSaw.pm.in, lib/BuzzSaw/Catalogue,
+	  lib/BuzzSaw/Catalogue.pm.in, lib/BuzzSaw/Cmd.pm.in,
+	  lib/BuzzSaw/DateTime.pm.in, lib/BuzzSaw/Report/Kernel.pm.in,
+	  lib/BuzzSaw/Reporter.pm.in: Removed usage of Catalogue role
+
+2012-07-11 15:04  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Removed usage of Catalogue role
+
+2012-07-11 15:03  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd/Import.pm.in, lib/BuzzSaw/DataSource.pm.in,
+	  lib/BuzzSaw/DataSource/Files.pm.in, lib/BuzzSaw/Importer.pm.in,
+	  lib/BuzzSaw/Report.pm.in, lib/BuzzSaw/Types.pm.in: Using the new
+	  types system for the BuzzSaw::DB object, this makes it easier to
+	  load a new object using a config file name. Also eradicated the
+	  Catalogue role, it's increasingly pointless as everything is tied
+	  to the database interface
+
+2012-07-11 14:01  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Removed incorrect section of documentation
+
+2012-07-11 14:01  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter.pm.in, lib/BuzzSaw/Filter/Auth.pm.in,
+	  lib/BuzzSaw/Filter/Kernel.pm.in, lib/BuzzSaw/Parser.pm.in,
+	  lib/BuzzSaw/Parser/RFC3339.pm.in: Added documentation
+
+2012-07-11 11:17  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in, lib/BuzzSaw/DB/Schema.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/CurrentProcessing.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Log.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Tag.pm.in: Added documentation for
+	  all the modules related to the database. Added some support for
+	  printing out useful debugging info from the various method in
+	  BuzzSaw::DB
+
+2012-07-09 20:03  squinney@INF.ED.AC.UK
+
+	* bin, bin/buzzsaw.in, lib/App, lib/App/BuzzSaw.pm.in,
+	  lib/BuzzSaw/Cmd, lib/BuzzSaw/Cmd.pm.in,
+	  lib/BuzzSaw/Cmd/Import.pm.in: First pass on adding a commandline
+	  client for various utilities
+
+2012-07-09 16:26  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Store timestamps for events in UTC
+
+2012-07-09 13:21  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.4.0
 
 2012-07-09 13:21  squinney@INF.ED.AC.UK
 
