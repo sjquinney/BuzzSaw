@@ -1,6 +1,30 @@
-2012-07-17  SVN: new release
+2012-07-18  SVN: new release
 
-	* Release: 0.5.1
+	* Release: 0.5.2
+
+2012-07-18 08:42  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd.pm.in, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DataSource.pm.in, lib/BuzzSaw/DataSource/Files.pm.in,
+	  lib/BuzzSaw/Importer.pm.in, lib/BuzzSaw/Parser/RFC3339.pm.in:
+	  Various small tweaks to make perlcritic happier
+
+2012-07-17 14:00  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: reduced excessive debugging
+
+2012-07-17 13:47  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd.pm.in: Set the levels on the root-level logger
+
+2012-07-17 13:36  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd.pm.in: Added support for controlling the logging
+	  from the applications
+
+2012-07-17 12:50  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.5.1
 
 2012-07-17 12:50  squinney@INF.ED.AC.UK
 
