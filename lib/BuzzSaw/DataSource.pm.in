@@ -28,7 +28,7 @@ has 'db' => (
   required => 1,
   lazy     => 1,
   default  => sub { require BuzzSaw::DB;
-                    BuzzSaw::DB->new_with_config() }
+                    BuzzSaw::DB->new_with_config() },
 );
 
 has 'parser' => (

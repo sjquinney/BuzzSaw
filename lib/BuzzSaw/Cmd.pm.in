@@ -62,7 +62,7 @@ sub preflight {
     Log::Log4perl->easy_init($WARN);
   }
 
-  my $logger = Log::Log4perl::get_logger('');
+  my $logger = Log::Log4perl::get_logger(q{}); # Get the root logger
 
   # The secondary checks here are so that we avoid the possibility of
   # *lowering* the logging level if something higher was set in a

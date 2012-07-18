@@ -12,6 +12,7 @@ our $VERSION = '@LCFG_VERSION@';
 
 use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList BuzzSawDataSourceList);
 use DateTime ();
+use English qw(-no_match_vars);
 
 use Readonly;
 
@@ -58,7 +59,7 @@ has 'db' => (
   required => 1,
   lazy     => 1,
   default  => sub { require BuzzSaw::DB;
-                    BuzzSaw::DB->new_with_config() }
+                    BuzzSaw::DB->new_with_config() },
 );
 
 has 'readall' => (
@@ -116,8 +117,8 @@ sub import_events {
       # Parsing
 
       my %results = eval { $source->parser->parse_line($entry) };
-      if ($@) {
-        $self->log->error("Parse failure: $@");
+      if ($EVAL_ERROR) {
+        $self->log->error("Parse failure: $EVAL_ERROR");
         next;
       }
 

@@ -10,6 +10,7 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
+use English qw(-no_match_vars);
 use BuzzSaw::DB::Schema;
 
 use Moose;
@@ -108,7 +109,7 @@ sub begin_transaction {
   my ($self) = @_;
 
   if ( $self->log->is_debug ) {
-    $self->log->debug("Beginning transaction");
+    $self->log->debug('Beginning transaction');
   }
 
   return $self->schema->txn_begin;
@@ -118,7 +119,7 @@ sub end_transaction {
   my ($self) = @_;
 
   if ( $self->log->is_debug ) {
-    $self->log->debug("Ending transaction");
+    $self->log->debug('Ending transaction');
   }
 
   return $self->schema->txn_commit;
@@ -146,7 +147,7 @@ sub start_processing {
     $sth->finish;
   };
 
-  my $result = $@ ? 0 : 1;
+  my $result = $EVAL_ERROR ? 0 : 1;
 
   return $result;
 }

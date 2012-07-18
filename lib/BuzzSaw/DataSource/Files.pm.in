@@ -11,6 +11,7 @@ use warnings;
 our $VERSION = '@LCFG_VERSION@';
 
 use Cwd ();
+use English qw(-no_match_vars);
 use File::Find::Rule ();
 use IO::File ();
 use List::Util ();
@@ -95,7 +96,7 @@ sub BUILD {
   # empty if names have been specified.
 
   if ( $self->count_names == 0 && $self->count_files == 0 ) {
-    $self->log->logdie("You must specify either a set of files or a set of names to find");
+    $self->log->logdie('You must specify either a set of files or a set of names to find');
   }
 
   return;
@@ -142,9 +143,9 @@ sub _find_files {
 
 sub reset {
   my ($self) = @_;
-  
+
   if ( $self->log->is_debug ) {
-    $self->log->debug("Resetting");
+    $self->log->debug('Resetting data source');
   }
 
   $self->_current_fileidx(-1);
@@ -218,13 +219,13 @@ sub _next_fh {
             or $self->log->logdie("Could not open $file: $IO::Uncompress::Bunzip2::Bunzip2Error");
         } else {
           $fh = IO::File->new( $file, 'r' )
-            or $self->log->logdie("Could not open $file: $!");
+            or $self->log->logdie("Could not open $file: $OS_ERROR");
         }
         return $fh;
       };
 
-      if ( $@ || !defined $new_fh ) {
-        $self->log->error($@) if $@;
+      if ( $EVAL_ERROR || !defined $new_fh ) {
+        $self->log->error($EVAL_ERROR) if $EVAL_ERROR;
 
         # just move onto the next available file
         $file = $self->_next_free_filename;
@@ -301,8 +302,8 @@ sub _next_filename {
 
         $next_digest = eval { $self->checksum_file($next_filename) };
 
-        if ( $@ || !defined $next_digest ) {
-          $self->log->error("Failed to calculate digest for $next_filename: $@");
+        if ( $EVAL_ERROR || !defined $next_digest ) {
+          $self->log->error("Failed to calculate digest for $next_filename: $EVAL_ERROR");
           $next_filename = undef;
           $next_digest   = undef;
         }
