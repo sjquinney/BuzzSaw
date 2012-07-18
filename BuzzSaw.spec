@@ -12,13 +12,22 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildRequires:  perl >= 1:5.6.1
 BuildRequires:  perl(Module::Build), perl(Test::More) >= 0.87
+BuildRequires:  perl(DBIx::Class), perl(DBD::Pg)
+BuildRequires:  perl(DateTime), perl(DateTime::Format::Pg)
+BuildRequires:  perl(IO::Uncompress::Bunzip2), perl(IO::Uncompress::Gunzip)
 BuildRequires:  perl(Digest::SHA)
 BuildRequires:  perl(File::Find::Rule)
 BuildRequires:  perl(Moose)
-BuildRequires:  perl(MooseX::Types)
+BuildRequires:  perl(MooseX::Types), perl(MooseX::Log::Log4perl)
 BuildRequires:  perl(Readonly)
 BuildRequires:  perl(UNIVERSAL::require)
 BuildRequires:  perl(MooseX::SimpleConfig)
+
+# These are Moose roles so don't get automatically identified.
+Requires:       perl(MooseX::Log::Log4perl), perl(MooseX::SimpleConfig)
+Requires:       perl(MooseX::Getopt)
+# DBIx::Class loads these dynamically
+Requires:       perl(DBD::Pg), perl(DateTime::Format::Pg)
 
 %description
 @LCFG_ABSTRACT@
