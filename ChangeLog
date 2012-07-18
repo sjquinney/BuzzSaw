@@ -1,6 +1,14 @@
 2012-07-18  SVN: new release
 
-	* Release: 0.5.3
+	* Release: 0.5.4
+
+2012-07-18 09:22  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec: Added even more build dependencies
+
+2012-07-18 09:15  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.5.3
 
 2012-07-18 09:15  squinney@INF.ED.AC.UK
 
