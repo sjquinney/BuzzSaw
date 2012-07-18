@@ -19,13 +19,14 @@ BuildRequires:  perl(Digest::SHA)
 BuildRequires:  perl(File::Find::Rule)
 BuildRequires:  perl(Moose)
 BuildRequires:  perl(MooseX::Types), perl(MooseX::Log::Log4perl)
+BuildRequires:  perl(MooseX::SimpleConfig), perl(MooseX::App::Cmd)
 BuildRequires:  perl(Readonly)
 BuildRequires:  perl(UNIVERSAL::require)
-BuildRequires:  perl(MooseX::SimpleConfig)
+BuildRequires:  perl(YAML::Syck)
 
 # These are Moose roles so don't get automatically identified.
 Requires:       perl(MooseX::Log::Log4perl), perl(MooseX::SimpleConfig)
-Requires:       perl(MooseX::Getopt)
+Requires:       perl(MooseX::Getopt), perl(MooseX::App::Cmd)
 # DBIx::Class loads these dynamically
 Requires:       perl(DBD::Pg), perl(DateTime::Format::Pg)
 
