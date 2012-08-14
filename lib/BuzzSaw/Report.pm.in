@@ -2,45 +2,38 @@ package BuzzSaw::Report;
 use strict;
 use warnings;
 
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
+
 use BuzzSaw::DB;
 use BuzzSaw::DateTime;
-use BuzzSaw::Types qw(BuzzSawDB);
+use BuzzSaw::Types qw(BuzzSawDB BuzzSawDateTime);
 
 use MIME::Lite ();
 use Template ();
 
 use Moose;
-use Moose::Util::TypeConstraints;
-
-class_type('BuzzSaw::DateTime');
-
-coerce 'BuzzSaw::DateTime'
-    => from 'Int'
-    => via { my $dt = BuzzSaw::DateTime->from_epoch( epoch => $_ );
-             $dt->set_time_zone('local');
-             return $dt; };
-
-coerce 'BuzzSaw::DateTime'
-    => from 'Str'
-    => via { BuzzSaw::DateTime->from_date_string($_) };
-
-coerce 'BuzzSaw::DateTime'
-    => from 'HashRef'
-    => via { BuzzSaw::DateTime->new( time_zone => 'local', %{$_} ) };
+use MooseX::Types::Moose qw(ArrayRef Str);
 
 has 'db' => (
-  is      => 'rw',
-  isa     => BuzzSawDB,
-  lazy    => 1,
-  default => sub { require BuzzSaw::DB;
-                   BuzzSaw::DB->new_with_config() }
+  is       => 'rw',
+  isa      => BuzzSawDB,
+  coerce   => 1,
+  required => 1,
+  lazy     => 1,
+  default  => sub { BuzzSaw::DB->new_with_config() },
 );
 
 has 'name' => (
   is       => 'ro',
-  isa      => 'Str',
+  isa      => Str,
   required => 1,
-  default => sub {
+  default  => sub {
     my $class = shift @_;
     my $name = ( split /::/, $class->meta->name )[-1];
     return $name;
@@ -49,19 +42,19 @@ has 'name' => (
 
 has 'email_to' => (
   is        => 'ro',
-  isa       => 'Str',
+  isa       => Str,
   predicate => 'send_by_email',
 );
 
 has 'email_from' => (
   is        => 'ro',
-  isa       => 'Str',
+  isa       => Str,
   predicate => 'has_email_from',
 );
 
 has 'email_subject' => (
   is       => 'ro',
-  isa      => 'Str',
+  isa      => Str,
   default  => sub { my $self = shift @_;
                     'BuzzSaw Report - ' . $self->name },
   required => 1,
@@ -70,7 +63,7 @@ has 'email_subject' => (
 
 has 'template' => (
   is       => 'ro',
-  isa      => 'Str',
+  isa      => Str,
   required => 1,
   default => sub {
     my $class = shift @_;
@@ -82,15 +75,15 @@ has 'template' => (
 
 has 'tmpldir' => (
     is       => 'ro',
-    isa      => 'ArrayRef[Str]',
+    isa      => ArrayRef[Str],
     required => 1,
-    default  => sub { ['/usr/share/buzzsaw/templates/reports',
-                       '/usr/share/buzzsaw/templates'] },
+    default  => sub { [ '/usr/share/buzzsaw/templates/reports',
+                        '/usr/share/buzzsaw/templates' ] },
 );
 
 has 'start' => (
     is       => 'ro',
-    isa      => 'BuzzSaw::DateTime',
+    isa      => BuzzSawDateTime,
     required => 1,
     coerce   => 1,
     default  => sub { 'yesterday' },
@@ -98,7 +91,7 @@ has 'start' => (
 
 has 'end' => (
     is       => 'ro',
-    isa      => 'BuzzSaw::DateTime',
+    isa      => BuzzSawDateTime,
     required => 1,
     coerce   => 1,
     default  => sub { 'today' },
@@ -107,7 +100,7 @@ has 'end' => (
 has 'tags' => (
   traits    => ['Array'],
   is        => 'ro',
-  isa       => 'ArrayRef[Str]',
+  isa       => ArrayRef[Str],
   default   => sub { [] },
   handles   => {
     has_tags  => 'count',
