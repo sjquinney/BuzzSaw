@@ -2,6 +2,14 @@ package BuzzSaw::DateTime;
 use strict;
 use warnings;
 
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
+
 use base 'DateTime';
 
 use Date::Parse ();
@@ -14,6 +22,9 @@ sub from_date_string {
 
     # Ensure we are using the current local timezone
     $now->set_time_zone('local');
+
+    # NOTE: When making changes to this code consider VERY carefully
+    # what is going on with the timezone.
 
     my $dt;
     if ( $date_string eq 'now' ) {
@@ -61,3 +72,127 @@ sub from_date_string {
 1;
 
 __END__
+
+=head1 NAME
+
+BuzzSaw::DateTime - A class which provides additional functionality to DateTime
+
+=head1 VERSION
+
+This documentation refers to BuzzSaw::Filter version @LCFG_VERSION@
+
+=head1 SYNOPSIS
+
+use BuzzSaw::DateTime;
+
+my $dt = BuzzSaw::DateTime->from_date_string( "this-week" );
+
+=head1 DESCRIPTION
+
+This module extends the DateTime module to provide an extra
+constructor method. This method provides the ability to parse dates in
+a variety of formats and styles to create a new DateTime object. In
+particular, this module supports the date specifier strings used by
+the Linux Audit Framework.
+
+The BuzzSaw project provides a suite of tools for processing log file
+entries. Entries in files are parsed and filtered into a set of events
+of interest which are stored in a database. A report generation
+framework is also available which makes it easy to generate regular
+reports regarding the events discovered.
+
+=head1 SUBROUTINES/METHODS
+
+This class provides one additional method beyond those provided by the
+DateTime module.
+
+=over
+
+=item from_date_string( $str )
+
+This method will return a new object based on one of the following
+strings:
+
+=over
+
+=item C<now>
+
+Right now.
+
+=item C<today>
+
+1 second after midnight on this day.
+
+=item C<recent>
+
+10 minutes ago.
+
+=item C<yesterday>
+
+1 second after midnight on the previous day.
+
+=item C<this-week>
+
+1 second after midnight on the first day of the week.
+
+=item C<this-month>
+
+1 second after midnight on the first day of the month.
+
+=item C<this-year>
+
+1 second after midnight on the first day of the year.
+
+=item C<week-ago>
+
+Seven days ago.
+
+=item seconds from unix epoch
+
+A string which is purely digits will be treated as being the number of
+seconds since the unix epoch.
+
+=item variously formatted date/time strings
+
+Anything else that does not match something which has already been
+mentioned above is passed to the L<Date::Parse> C<strptime>
+function. This should work if the string is well formatted, if not you
+might get something very weird returned.
+
+=back
+
+=back
+
+=head1 DEPENDENCIES
+
+L<DateTime>, L<DateTime::Duration>, L<Date::Parse>
+
+=head1 SEE ALSO
+
+L<BuzzSaw>
+
+=head1 PLATFORMS
+
+This is the list of platforms on which we have tested this
+software. We expect this software to work on any Unix-like platform
+which is supported by Perl.
+
+@LCFG_PLATFORMS@
+
+=head1 BUGS AND LIMITATIONS
+
+Please report any bugs or problems (or praise!) to bugs@lcfg.org,
+feedback and patches are also always very welcome.
+
+=head1 AUTHOR
+
+    @LCFG_AUTHOR@
+
+=head1 LICENSE AND COPYRIGHT
+
+    Copyright (C) 2012 University of Edinburgh. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the terms of the GPL, version 2 or later.
+
+=cut
