@@ -10,6 +10,7 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
+use BuzzSaw::DB;
 use BuzzSaw::Types qw(BuzzSawDB BuzzSawFilterList BuzzSawDataSourceList);
 use DateTime ();
 use English qw(-no_match_vars);
@@ -58,8 +59,7 @@ has 'db' => (
   coerce   => 1,
   required => 1,
   lazy     => 1,
-  default  => sub { require BuzzSaw::DB;
-                    BuzzSaw::DB->new_with_config() },
+  default  => sub { BuzzSaw::DB->new_with_config() },
 );
 
 has 'readall' => (
