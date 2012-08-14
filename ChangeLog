@@ -1,6 +1,29 @@
-2012-07-18  SVN: new release
+2012-08-14  SVN: new release
 
-	* Release: 0.5.4
+	* Release: 0.5.5
+
+2012-08-14 10:41  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Use the new BuzzSawDateTime type.
+	  Tidied various bits of the Moose code
+
+2012-08-14 10:37  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DateTime.pm.in: Added documentation
+
+2012-08-14 10:37  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: Added support for the BuzzSawDateTime
+	  class
+
+2012-08-14 10:36  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Ensure the BuzzSaw::DB module is
+	  always loaded
+
+2012-07-18 09:22  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.5.4
 
 2012-07-18 09:22  squinney@INF.ED.AC.UK
 
