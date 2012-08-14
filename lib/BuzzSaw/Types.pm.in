@@ -13,6 +13,7 @@ our $VERSION = '@LCFG_VERSION@';
 use UNIVERSAL::require;
 
 use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
+                                  BuzzSawDateTime
                                   BuzzSawDataSource BuzzSawDataSourceList
                                   BuzzSawFilter BuzzSawFilterList)];
 use MooseX::Types::Moose qw(ArrayRef HashRef Str);
@@ -62,11 +63,13 @@ class_type BuzzSawDB, { class => 'BuzzSaw::DB' };
 
 coerce BuzzSawDB,
   from Str,
-  via { BuzzSaw::DB->new_with_config($_) };
+  via { require BuzzSaw::DB;
+        BuzzSaw::DB->new_with_config($_) };
 
 coerce BuzzSawDB,
   from HashRef,
-  via { BuzzSaw::DB->new($_) };
+  via { require BuzzSaw::DB;
+        BuzzSaw::DB->new($_) };
 
 # DataSource
 
@@ -86,6 +89,25 @@ subtype BuzzSawDataSourceList,
 coerce BuzzSawDataSourceList,
   from ArrayRef,
   via { [ map { to_BuzzSawDataSource($_) } @{$_} ] };
+
+# DateTime
+
+class_type BuzzSawDateTime, { class => 'BuzzSaw::DateTime' };
+
+coerce BuzzSawDateTime,
+    from Str,
+    via {
+      require BuzzSaw::DateTime;
+      BuzzSaw::DateTime->from_date_string($_);
+    };
+
+coerce BuzzSawDateTime,
+    from HashRef,
+    via {
+      require BuzzSaw::DateTime;
+      BuzzSaw::DateTime->new( time_zone => 'local', %{$_} );
+    };
+
 
 1;
 __END__
