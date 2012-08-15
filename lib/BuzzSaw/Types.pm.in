@@ -15,9 +15,10 @@ use UNIVERSAL::require;
 use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
                                   BuzzSawDateTime
                                   BuzzSawDataSource BuzzSawDataSourceList
+                                  BuzzSawDataSourceFilesNamesList
                                   BuzzSawFilter BuzzSawFilterList
                                   BuzzSawReport BuzzSawReportList)];
-use MooseX::Types::Moose qw(ArrayRef HashRef Str);
+use MooseX::Types::Moose qw(ArrayRef HashRef RegexpRef Str);
 
 sub create_new_object {
   my ( $modbase, $modname, @args ) = @_;
@@ -128,6 +129,16 @@ coerce BuzzSawDateTime,
       BuzzSaw::DateTime->new( time_zone => 'local', %{$_} );
     };
 
+subtype BuzzSawDataSourceFilesNamesList,
+  as ArrayRef[Str|RegexpRef];
+
+coerce BuzzSawDataSourceFilesNamesList,
+  from Str,
+  via { [$_] };
+
+coerce BuzzSawDataSourceFilesNamesList,
+  from RegexpRef,
+  via { [$_] };
 
 1;
 __END__

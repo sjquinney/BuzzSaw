@@ -10,6 +10,8 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
+use BuzzSaw::Types qw(BuzzSawDataSourceFilesNamesList);
+
 use Cwd ();
 use English qw(-no_match_vars);
 use File::Find::Rule ();
@@ -17,7 +19,7 @@ use IO::File ();
 use List::Util ();
 
 use Moose;
-use MooseX::Types::Moose qw(ArrayRef Bool FileHandle Int Maybe RegexpRef Str);
+use MooseX::Types::Moose qw(ArrayRef Bool FileHandle Int Maybe Str);
 
 with 'BuzzSaw::DataSource';
 
@@ -35,8 +37,9 @@ has 'directories' => (
 
 has 'names' => (
     traits   => ['Array'],
-    isa      => ArrayRef[Str|RegexpRef],
+    isa      => BuzzSawDataSourceFilesNamesList,
     is       => 'ro',
+    coerce   => 1,
     required => 1,
     default  => sub { [] },
     handles  => {
