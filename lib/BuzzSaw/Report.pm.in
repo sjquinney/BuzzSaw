@@ -73,7 +73,7 @@ has 'template' => (
   },
 );
 
-has 'tmpldir' => (
+has 'tmpldirs' => (
     is       => 'ro',
     isa      => ArrayRef[Str],
     required => 1,
@@ -167,7 +167,7 @@ sub process_template {
 
   my $tt = Template->new(
     {
-      INCLUDE_PATH => $self->tmpldir,
+      INCLUDE_PATH => $self->tmpldirs,
     }
   ) or die "$Template::ERROR\n";
 

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 use_ok 'BuzzSaw::Types';
 
@@ -24,6 +24,10 @@ use_ok 'BuzzSaw::Report';
 
 use_ok 'BuzzSaw::Report::Kernel';
 
+use_ok 'BuzzSaw::ReportLog';
+
 use_ok 'BuzzSaw::Reporter';
 
 use_ok 'BuzzSaw::Cmd::Import';
+
+use_ok 'BuzzSaw::Cmd::Report';

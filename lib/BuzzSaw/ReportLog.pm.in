@@ -1,0 +1,208 @@
+package BuzzSaw::ReportLog;
+use strict;
+use warnings;
+
+# $Id: Report.pm.in 21587 2012-08-14 10:41:01Z squinney@INF.ED.AC.UK $
+# $Source:$
+# $Revision: 21587 $
+# $HeadURL: https://svn.lcfg.org/svn/source/trunk/BuzzSaw/lib/BuzzSaw/Report.pm.in $
+# $Date: 2012-08-14 11:41:01 +0100 (Tue, 14 Aug 2012) $
+
+our $VERSION = '@LCFG_VERSION@';
+
+use File::Spec ();
+use File::Temp ();
+use Text::Diff ();
+use YAML::Syck ();
+
+my @REPORT_TYPES = qw/hourly daily weekly monthly/;
+
+use Moose;
+use MooseX::Types::Moose qw(HashRef Bool Int Str);
+
+has '_initialising' => (
+  is       => 'rw',
+  isa      => Bool,
+  default  => 1,
+  init_arg => undef,
+);
+
+has '_changes' => (
+  is       => 'rw',
+  isa      => Bool,
+  default  => 0,
+  init_arg => undef,
+);
+
+has 'store_after_change' => (
+  is      => 'rw',
+  isa     => Bool,
+  default => 0,
+);
+
+has 'file' => (
+  is       => 'rw',
+  isa      => Str,
+  required => 1,
+  trigger  => \&handle_change,
+  default  => '/var/lib/buzzsaw/report.runlog.yaml',
+);
+
+has 'hourly' => (
+  traits   => ['Hash'],
+  is       => 'rw',
+  isa      => HashRef[Int],
+  default  => sub { {} },
+  init_arg => undef,
+  trigger  => \&handle_change,
+  handles  => {
+    has_hourly_timestamp => 'exists',
+    get_hourly_timestamp => 'get',
+    set_hourly_timestamp => 'set',
+  },
+);
+
+has 'daily' => (
+  traits   => ['Hash'],
+  is       => 'rw',
+  isa      => HashRef[Int],
+  default  => sub { {} },
+  init_arg => undef,
+  trigger  => \&handle_change,
+  handles  => {
+    has_daily_timestamp => 'exists',
+    get_daily_timestamp => 'get',
+    set_daily_timestamp => 'set',
+  },
+);
+
+has 'weekly' => (
+  traits   => ['Hash'],
+  is       => 'rw',
+  isa      => HashRef[Int],
+  default  => sub { {} },
+  init_arg => undef,
+  trigger  => \&handle_change,
+  handles  => {
+    has_weekly_timestamp => 'exists',
+    get_weekly_timestamp => 'get',
+    set_weekly_timestamp => 'set',
+  },
+);
+
+has 'monthly' => (
+  traits   => ['Hash'],
+  is       => 'rw',
+  isa      => HashRef[Int],
+  default  => sub { {} },
+  init_arg => undef,
+  trigger  => \&handle_change,
+  handles  => {
+    has_monthly_timestamp => 'exists',
+    get_monthly_timestamp => 'get',
+    set_monthly_timestamp => 'set',
+  },
+);
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+sub handle_change {
+  my ( $self, $new_value, $old_value ) = @_;
+
+  if ( !$self->_initialising ) {
+    $self->_changes(1);
+
+    if ( $self->store_after_change ) {
+      $self->store();
+    }
+  }
+
+  return;
+}
+
+sub BUILD {
+  my ($self) = @_;
+
+  my $file = $self->file;
+
+  if ( -f $file ) {
+
+    my $data = eval { YAML::Syck::LoadFile( $file ) };
+
+    if ( $@ || !defined $data || ref $data ne 'HASH' ) {
+      die "Failed to load report log from '$file'\n";
+    }
+
+    for my $type (@REPORT_TYPES) {
+      if ( exists $data->{$type} && defined $data->{$type} ) {
+        $self->$type($data->{$type});
+      }
+    }
+
+  }
+
+  $self->_initialising(0);
+  $self->_changes(0);
+
+  return;
+}
+
+sub store {
+  my ( $self, $force ) = @_;
+
+  if ( !$self->_changes && !$force ) {
+    return;
+  }
+
+  my %data;
+  for my $type (@REPORT_TYPES) {
+    my $logs = $self->$type;
+    if ( scalar keys %{$logs} > 0 ) {
+      $data{$type} = $logs;
+    }
+  }
+
+  if ( scalar keys %data > 0 ) {
+
+    my $file = $self->file;
+
+    my ( $v, $dir, $filename ) = File::Spec->splitpath($file);
+    my $tmpfh = File::Temp->new( TEMPLATE => 'tempXXXXX',
+                                 DIR      => $dir,
+                                 UNLINK   => 0 );
+    my $tmpfile = $tmpfh->filename;
+
+    {
+      local $YAML::Syck::SortKeys = 1;
+
+      YAML::Syck::DumpFile( $tmpfile, \%data );
+    }
+
+    my $updated = 0;
+    if ( !-e $file ) {
+      $updated = 1;
+    } else {
+      my $diff = Text::Diff::diff( $file, $tmpfile );
+      $updated = length $diff > 0 ? 1 : 0;
+    }
+
+    if ($updated) {
+      rename $tmpfile, $file
+        or die "Could not rename '$tmpfile' to '$file': $!\n";
+    }
+
+  }
+
+  $self->_changes(0);
+
+  return;
+}
+
+sub DEMOLISH {
+  my ($self) = @_;
+  return $self->store();
+}
+
+1;
+__END__

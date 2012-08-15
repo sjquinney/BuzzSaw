@@ -15,7 +15,8 @@ use UNIVERSAL::require;
 use MooseX::Types -declare => [qw(BuzzSawDB BuzzSawParser
                                   BuzzSawDateTime
                                   BuzzSawDataSource BuzzSawDataSourceList
-                                  BuzzSawFilter BuzzSawFilterList)];
+                                  BuzzSawFilter BuzzSawFilterList
+                                  BuzzSawReport BuzzSawReportList)];
 use MooseX::Types::Moose qw(ArrayRef HashRef Str);
 
 sub create_new_object {
@@ -56,6 +57,25 @@ subtype BuzzSawFilterList,
 coerce BuzzSawFilterList,
   from ArrayRef,
   via { [ map { to_BuzzSawFilter($_) } @{$_} ] };
+
+# Report
+
+class_type BuzzSawReport, { class => 'BuzzSaw::Report' };
+
+coerce BuzzSawReport,
+  from Str,
+  via { create_new_object( 'BuzzSaw::Report', $_ ) };
+
+coerce BuzzSawReport,
+  from ArrayRef,
+  via { create_new_object( 'BuzzSaw::Report', @{$_} ) };
+
+subtype BuzzSawReportList,
+  as ArrayRef[BuzzSawReport];
+
+coerce BuzzSawReportList,
+  from ArrayRef,
+  via { [ map { to_BuzzSawReport($_) } @{$_} ] };
 
 # DB
 

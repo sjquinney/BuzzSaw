@@ -48,6 +48,8 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
+mkdir -p $RPM_BUILD_ROOT/var/lib/buzzsaw
+
 %check
 ./Build test
 
@@ -60,6 +62,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{perl_vendorlib}/App/*
 %{_bindir}/*
 /usr/share/buzzsaw/
+%attr(0770,logfiles,logfiles)/var/lib/buzzsaw
 
 %clean
 rm -rf $RPM_BUILD_ROOT

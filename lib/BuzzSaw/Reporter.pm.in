@@ -2,8 +2,17 @@ package BuzzSaw::Reporter;
 use strict;
 use warnings;
 
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
+
 use BuzzSaw::DateTime ();
-use YAML::Syck ();
+use BuzzSaw::ReportLog ();
+use BuzzSaw::Types qw(BuzzSawReportList);
 
 use Readonly;
 
@@ -11,12 +20,34 @@ Readonly my $ONE_HOUR => 60 * 60;
 Readonly my $ONE_DAY  => $ONE_HOUR * 24;
 Readonly my $ONE_WEEK => $ONE_DAY * 7;
 
+Readonly my @REPORT_TYPES => qw/hourly daily weekly monthly/;
+
 use Moose;
+use MooseX::Types::Moose qw(Bool);
+
+with 'MooseX::Log::Log4perl', 'MooseX::SimpleConfig';
+
+has '+configfile' => (
+  default => '/etc/buzzsaw/reporter.yaml',
+);
+
+has 'force' => (
+  is      => 'rw',
+  isa     => Bool,
+  default => 0,
+);
+
+has 'dryrun' => (
+  is      => 'rw',
+  isa     => Bool,
+  default => 0,
+);
 
 has 'hourly' => (
   traits  => ['Array'],
   is      => 'ro',
-  isa     => 'ArrayRef[BuzzSaw::Report]',
+  isa     => BuzzSawReportList,
+  coerce  => 1,
   default => sub { [] },
   handles => {
     hourly_list => 'elements',
@@ -26,7 +57,8 @@ has 'hourly' => (
 has 'daily' => (
   traits  => ['Array'],
   is      => 'ro',
-  isa     => 'ArrayRef[BuzzSaw::Report]',
+  isa     => BuzzSawReportList,
+  coerce  => 1,
   default => sub { [] },
   handles => {
     daily_list => 'elements',
@@ -36,7 +68,8 @@ has 'daily' => (
 has 'weekly' => (
   traits  => ['Array'],
   is      => 'ro',
-  isa     => 'ArrayRef[BuzzSaw::Report]',
+  isa     => BuzzSawReportList,
+  coerce  => 1,
   default => sub { [] },
   handles => {
     weekly_list => 'elements',
@@ -46,7 +79,8 @@ has 'weekly' => (
 has 'monthly' => (
   traits  => ['Array'],
   is      => 'ro',
-  isa     => 'ArrayRef[BuzzSaw::Report]',
+  isa     => BuzzSawReportList,
+  coerce  => 1,
   default => sub { [] },
   handles => {
     monthly_list => 'elements',
@@ -55,40 +89,18 @@ has 'monthly' => (
 
 has 'runlog' => (
   is      => 'ro',
-  isa     => 'Str',
-  default =>  '/var/lib/buzzsaw/report.runlog.yml',
+  isa     => 'BuzzSaw::ReportLog',
+  default =>  sub { BuzzSaw::ReportLog->new( store_after_change => 1 ) },
 );
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
-sub load_runlog {
-  my ($self) = @_;
-
-  my $runlog = {};
-  if ( -f $self->runlog ) {
-    $runlog = YAML::Syck::LoadFile($self->runlog);
-  }
-
-  $runlog->{hourly} //= {};
-  $runlog->{daily} //= {};
-  $runlog->{weekly} //= {};
-  $runlog->{monthly} //= {};
-
-  return $runlog;
-}
-
-sub store_runlog {
-  my ( $self, $runlog ) = @_;
-
-  return YAML::Syck::DumpFile( $self->runlog, $runlog );
-}
-
 sub generate_reports {
   my ( $self, @reports ) = @_;
 
   if ( scalar @reports == 0 ) {
-    @reports = qw(hourly daily weekly monthly);
+    @reports = @REPORT_TYPES;
   }
 
   for my $report (@reports) {
@@ -111,43 +123,39 @@ sub generate_reports {
 sub run_hourly_reports {
   my ($self) = @_;
 
-  my $runlog = $self->load_runlog;
+  if ( $self->log->is_debug ) {
+    $self->log->debug('Running hourly reports');
+  }
 
-  $self->_run_reports( $ONE_HOUR, $runlog->{hourly}, $self->hourly_list );
-
-  $self->store_runlog($runlog);
-
-  return;
+  return $self->_run_reports( $ONE_HOUR, 'hourly', $self->hourly_list );
 }
 
 sub run_daily_reports {
   my ($self) = @_;
 
-  my $runlog = $self->load_runlog;
+  if ( $self->log->is_debug ) {
+    $self->log->debug('Running daily reports');
+  }
 
-  $self->_run_reports( $ONE_DAY, $runlog->{daily}, $self->daily_list );
-
-  $self->store_runlog($runlog);
-
-  return;
+  return $self->_run_reports( $ONE_DAY, 'daily', $self->daily_list );
 }
 
 sub run_weekly_reports {
   my ($self) = @_;
 
-  my $runlog = $self->load_runlog;
+  if ( $self->log->is_debug ) {
+    $self->log->debug('Running weekly reports');
+  }
 
-  $self->_run_reports( $ONE_WEEK, $runlog->{weekly}, $self->weekly_list );
-
-  $self->store_runlog($runlog);
-
-  return;
+  return $self->_run_reports( $ONE_WEEK, 'weekly', $self->weekly_list );
 }
 
 sub run_monthly_reports {
   my ($self) = @_;
 
-  my $runlog = $self->load_runlog;
+  if ( $self->log->is_debug ) {
+    $self->log->debug('Running monthly reports');
+  }
 
   my $now = BuzzSaw::DateTime->now();
   $now->set_time_zone('local');
@@ -156,25 +164,30 @@ sub run_monthly_reports {
   my $then = $now - $dur;
   my $one_month = $now->epoch() - $then->epoch();
 
-  $self->_run_reports( $one_month, $runlog->{monthly}, $self->monthly_list );
-
-  $self->store_runlog($runlog);
-
-  return;
+  return $self->_run_reports( $one_month, 'monthly', $self->monthly_list );
 }
 
 sub _run_reports {
-  my ( $self, $duration, $runlog, @report_list ) = @_;
+  my ( $self, $duration, $report_type, @reports ) = @_;
 
-  for my $report (@report_list) {
+  my $runlog = $self->runlog;
+
+  # This is a little bit hacky...
+  my $get_timestamp_method = 'get_' . $report_type . '_timestamp';
+  my $set_timestamp_method = 'set_' . $report_type . '_timestamp';
+  my $has_timestamp_method = 'has_' . $report_type . '_timestamp';
+
+  for my $report (@reports) {
     my $name = $report->name;
 
     my $needs_run = 0;
-    if ( exists $runlog->{$name} && defined $runlog->{$name} ) {
+    if ( $self->force ) {
+      $needs_run = 1;
+    } elsif ( $runlog->$has_timestamp_method($name) ) {
       my $now  = time;
-      my $prev = $runlog->{$name};
+      my $prev = $runlog->$get_timestamp_method($name);
 
-      if ( $now - $prev > $duration ) {
+      if ( $now - $prev >= $duration ) {
         $needs_run = 1;
       }
 
@@ -183,9 +196,13 @@ sub _run_reports {
     }
 
     if ($needs_run) {
-      warn "Running $name report\n";
-      $report->generate();
-      $runlog->{$name} = time;
+      if ( $self->dryrun ) {
+        $self->log->info("Dry-run: Would have run $name $report_type report");
+      } else {
+        $self->log->info("Running $name $report_type report");
+        $report->generate();
+        $runlog->$set_timestamp_method( $name, time );
+      }
     }
 
   }
