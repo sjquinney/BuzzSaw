@@ -1,6 +1,17 @@
 2012-08-15  SVN: new release
 
-	* Release: 0.6.1
+	* Release: 0.6.2
+
+2012-08-15 15:12  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DataSource/Files.pm.in,
+	  lib/BuzzSaw/Types.pm.in: Reworked file names attribute type to
+	  allow scalar string or regexp values to be coerced into a
+	  single-element list
+
+2012-08-15 11:59  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.6.1
 
 2012-08-15 11:59  squinney@INF.ED.AC.UK
 
