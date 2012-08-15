@@ -79,8 +79,16 @@ CREATE TABLE tag (
     CONSTRAINT name_event UNIQUE(name,event)
 );
 
-GRANT SELECT               ON TABLE log,event,tag                    TO logfiles_reader;
-GRANT SELECT,INSERT,UPDATE ON TABLE current_processing,log,event,tag TO logfiles_writer;
-GRANT SELECT,UPDATE        ON SEQUENCE current_processing_id_seq, event_id_seq, log_id_seq, tag_id_seq TO logfiles_writer;
+GRANT SELECT                      ON TABLE log, event, tag
+                                  TO logfiles_reader;
+
+GRANT SELECT,INSERT,UPDATE        ON TABLE log, event, tag
+                                  TO logfiles_writer;
+
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE current_processing
+                                  TO logfiles_writer;
+
+GRANT SELECT,UPDATE               ON SEQUENCE current_processing_id_seq, event_id_seq, log_id_seq, tag_id_seq
+                                  TO logfiles_writer;
 
 COMMIT;
