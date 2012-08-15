@@ -22,7 +22,7 @@ BuildRequires:  perl(MooseX::Types), perl(MooseX::Log::Log4perl)
 BuildRequires:  perl(MooseX::SimpleConfig), perl(MooseX::App::Cmd)
 BuildRequires:  perl(Readonly)
 BuildRequires:  perl(UNIVERSAL::require)
-BuildRequires:  perl(YAML::Syck)
+BuildRequires:  perl(YAML::Syck), perl(Text::Diff)
 
 # These are Moose roles so don't get automatically identified.
 Requires:       perl(MooseX::Log::Log4perl), perl(MooseX::SimpleConfig)
