@@ -16,6 +16,7 @@ WriteMakefile
                            'Readonly' => 0,
                            'Test::More' => '0.87',
                            'MooseX::Types' => '0.21',
+                           'MooseX::Types::EmailAddress' => 0,
                            'Digest::SHA' => 0,
                            'UNIVERSAL::require' => 0,
                            'DBIx::Class' => '0.08196',
