@@ -1,6 +1,29 @@
-2012-08-15  SVN: new release
+2012-08-22  SVN: new release
 
-	* Release: 0.6.2
+	* Release: 0.6.3
+
+2012-08-22 14:32  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Report.pm.in: Switched to using
+	  MooseX::Types::EmailAddress types for the To and Cc fields when
+	  sending reports by email
+
+2012-08-15 17:44  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: Granted permission to the logfiles_writer user to
+	  delete entries in current_processing table
+
+2012-08-15 17:41  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: Added commands to grant access permissions
+
+2012-08-15 17:40  squinney@INF.ED.AC.UK
+
+	* buzzsaw-dbinit.sh: Added basic database setup script
+
+2012-08-15 15:12  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.6.2
 
 2012-08-15 15:12  squinney@INF.ED.AC.UK
 
