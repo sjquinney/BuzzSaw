@@ -1,6 +1,15 @@
 2012-08-22  SVN: new release
 
-	* Release: 0.6.3
+	* Release: 0.6.4
+
+2012-08-22 14:34  squinney@INF.ED.AC.UK
+
+	* Build.PL.in, BuzzSaw.spec, META.yml.in, Makefile.PL: added
+	  missing dependency
+
+2012-08-22 14:33  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.6.3
 
 2012-08-22 14:32  squinney@INF.ED.AC.UK
 
