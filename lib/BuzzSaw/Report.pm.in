@@ -18,6 +18,7 @@ use MIME::Lite ();
 use Template ();
 
 use Moose;
+use MooseX::Types::EmailAddress qw(EmailAddress EmailAddressList);
 use MooseX::Types::Moose qw(ArrayRef Str);
 
 has 'db' => (
@@ -41,14 +42,20 @@ has 'name' => (
 );
 
 has 'email_to' => (
+  traits    => ['Array'],
   is        => 'ro',
-  isa       => Str,
-  predicate => 'send_by_email',
+  isa       => EmailAddressList,
+  coerce    => 1,
+  default   => sub { [] },
+  handles   => {
+    'send_by_email'      => 'count',
+    'email_to_addresses' => 'elements',
+  },
 );
 
 has 'email_from' => (
   is        => 'ro',
-  isa       => Str,
+  isa       => EmailAddress,
   predicate => 'has_email_from',
 );
 
@@ -142,11 +149,18 @@ sub generate {
 sub send_email {
   my ( $self, $text ) = @_;
 
+  my ( $to, @cc ) = $self->email_to_addresses;
+
   my @args = (
-    To       => $self->email_to,
+    To       => $to,
     Subject  => $self->email_subject,
     Data     => $text,
   );
+
+  if ( scalar @cc > 0 ) {
+    my $cc = join q{, }, @cc;
+    push @args, ( Cc => $cc );
+  }
 
   if ( $self->has_email_from ) {
     push @args, ( From => $self->email_from );
