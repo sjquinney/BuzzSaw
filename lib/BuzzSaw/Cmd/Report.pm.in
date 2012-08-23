@@ -26,12 +26,12 @@ has 'configfile' => (
   documentation => 'Load configuration from file',
 );
 
-has 'force' => (
+has 'all' => (
   traits  => ['Getopt'],
   is      => 'ro',
   isa     => Bool,
   default => 0,
-  documentation => 'Forcing the running of all reports',
+  documentation => 'Run all reports (even if already done for given period)',
 );
 
 has 'dryrun' => (
@@ -53,8 +53,8 @@ sub execute {
   my %args;
   $args{configfile} = $self->configfile if $self->has_configfile;
   $args{dryrun}     = 1                 if $self->dryrun;
-  $args{force}      = 1                 if $self->force;
- 
+  $args{all}        = 1                 if $self->all;
+
   my $reporter = BuzzSaw::Reporter->new_with_config(%args);
 
   $reporter->generate_reports(@{$args});
