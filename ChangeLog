@@ -1,6 +1,16 @@
-2012-08-22  SVN: new release
+2012-08-23  SVN: new release
 
-	* Release: 0.6.4
+	* Release: 0.6.5
+
+2012-08-23 07:47  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd/Report.pm.in, lib/BuzzSaw/Reporter.pm.in: Renamed
+	  the report command 'force' option to 'all' which makes the
+	  intended purpose clearer
+
+2012-08-22 14:34  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.6.4
 
 2012-08-22 14:34  squinney@INF.ED.AC.UK
 
