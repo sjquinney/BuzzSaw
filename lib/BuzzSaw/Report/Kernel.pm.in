@@ -1,6 +1,14 @@
-package BuzzSaw::Report::Kernel;
+package BuzzSaw::Report::Kernel; # -*-perl-*-
 use strict;
 use warnings;
+
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
 
 use Moose;
 
@@ -56,11 +64,11 @@ __END__
 
 =head1 NAME
 
-BuzzSaw::Report - A Moose class which is used for generating BuzzSaw reports
+BuzzSaw::Report::Kernel - Generate BuzzSaw reports about kernel events
 
 =head1 VERSION
 
-This documentation refers to BuzzSaw::Report version @LCFG_VERSION@
+This documentation refers to BuzzSaw::Report::Kernel version @LCFG_VERSION@
 
 =head1 SYNOPSIS
 
@@ -103,7 +111,7 @@ C<kernel> tag.
 
 =back
 
-=head1  SUBROUTINES/METHODS
+=head1 SUBROUTINES/METHODS
 
 This class does not have any subroutines or methods which are not part
 of the L<BuzzSaw::Report> parent class. It does override the
