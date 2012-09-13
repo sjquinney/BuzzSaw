@@ -1,6 +1,20 @@
 2012-09-13  SVN: new release
 
-	* Release: 0.7.0
+	* Release: 0.7.1
+
+2012-09-13 15:20  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DB/Schema/Result/ExtraInfo.pm.in,
+	  lib/BuzzSaw/Filter/SSH.pm.in, t/00_use.t: Fixed a couple of minor
+	  typos
+
+2012-09-13 15:13  squinney@INF.ED.AC.UK
+
+	* t/00_use.t: Added basic test for new filter
+
+2012-09-13 15:12  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.0
 
 2012-09-13 15:12  squinney@INF.ED.AC.UK
 
