@@ -225,9 +225,21 @@ sub register_log {
 
   my $schema = $self->schema;
 
-  my $new_log = $schema->resultset('Log')->new( { digest => $digest,
-                                                  name   => $logname } );
-  $new_log->insert;
+  my $dbh = $schema->storage->dbh();
+
+  my $find_sql   = q{SELECT id FROM log WHERE name = ? AND digest = ?};
+  my $create_sql = q{INSERT INTO log (name, digest) VALUES (?,?)};
+
+  my $find_sth = $dbh->prepare_cached($find_sql);
+  $find_sth->execute( $logname, $digest );
+  $find_sth->finish;
+
+  my $count = $find_sth->rows;
+  if ( $count == 0 ) {
+    my $create_sth = $dbh->prepare_cached($create_sql);
+    $find_sth->execute( $logname, $digest );
+    $find_sth->finish;
+  }
 
   return;
 }
