@@ -76,7 +76,7 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     size              => 20,
   },
-  'name',
+  'val',
   {
     data_type         => 'character varying',
     default_value     => undef,

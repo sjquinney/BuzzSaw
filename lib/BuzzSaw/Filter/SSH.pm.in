@@ -19,7 +19,7 @@ Readonly my $re_accepted => qr{^Accepted\s+
                                 from\s+
                                 (?<address>\S+)}xo;
 
-Readonly my $re_failed   => qr{^Failed\s+
+Readonly my $re_failed  => qr{^Failed\s+
                                 (?<method>\S+)\s+
                                 for\s+
                                 (invalid\s+user\s+)?
@@ -45,7 +45,7 @@ sub check {
 
       $accept = 1;
       push @tags, 'auth_success';
-    } elsif ( $event->{message} =~ $re_failure ) {
+    } elsif ( $event->{message} =~ $re_failed ) {
       $event->{userid} = $+{user};
       $event->{extra_info}{source_address} = $+{address};
 
