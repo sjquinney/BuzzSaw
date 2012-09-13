@@ -1,6 +1,15 @@
 2012-09-13  SVN: new release
 
-	* Release: 0.7.3
+	* Release: 0.7.4
+
+2012-09-13 16:24  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/SSH.pm.in: Fixed the program name check,
+	  should be 'sshd' not 'ssh'
+
+2012-09-13 16:03  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.3
 
 2012-09-13 15:44  squinney@INF.ED.AC.UK
 
