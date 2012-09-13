@@ -79,16 +79,24 @@ CREATE TABLE tag (
     CONSTRAINT name_event UNIQUE(name,event)
 );
 
-GRANT SELECT                      ON TABLE log, event, tag
+CREATE TABLE extra_info (
+    id       SERIAL                        PRIMARY KEY,
+    name     VARCHAR(20)                   NOT NULL,
+    val      VARCHAR(100)                  NOT NULL,
+    event    INTEGER                       NOT NULL REFERENCES event(id),
+    CONSTRAINT name_event_val UNIQUE(name,event,val)
+);
+
+GRANT SELECT                      ON TABLE log, event, tag, extra_info
                                   TO logfiles_reader;
 
-GRANT SELECT,INSERT,UPDATE        ON TABLE log, event, tag
+GRANT SELECT,INSERT,UPDATE        ON TABLE log, event, tag, extra_info
                                   TO logfiles_writer;
 
 GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE current_processing
                                   TO logfiles_writer;
 
-GRANT SELECT,UPDATE               ON SEQUENCE current_processing_id_seq, event_id_seq, log_id_seq, tag_id_seq
+GRANT SELECT,UPDATE               ON SEQUENCE current_processing_id_seq, event_id_seq, log_id_seq, tag_id_seq, extra_info_id_seq
                                   TO logfiles_writer;
 
 COMMIT;

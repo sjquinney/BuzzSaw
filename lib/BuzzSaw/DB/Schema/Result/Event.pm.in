@@ -187,6 +187,20 @@ __PACKAGE__->has_many(
   { 'foreign.event' => 'self.id' },
 );
 
+=head2 extra_info
+
+Type: has_many
+
+Related object: L<BuzzSaw::DB::Schema::Result::ExtraInfo>
+
+=cut
+
+__PACKAGE__->has_many(
+  'extra_info',
+  'BuzzSaw::DB::Schema::Result::ExtraInfo',
+  { 'foreign.event' => 'self.id' },
+);
+
 1;
 __END__
 

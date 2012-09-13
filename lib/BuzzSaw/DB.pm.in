@@ -192,6 +192,12 @@ sub register_event {
     $event_in_db{tags} = [ map {  { name => $_ } } @{ $event->{tags} } ];
   }
 
+  if ( exists $event->{extra_info} && defined $event->{extra_info} ) {
+    $event_in_db{extra_info} = [ map {  { name => $_,
+                                          val  => $event->{extra_info}{$_} } }
+                                 keys %{ $event->{extra_info} } ];
+  }
+
   my $new_event = $event_rs->new( \%event_in_db );
   $new_event->insert;
 
