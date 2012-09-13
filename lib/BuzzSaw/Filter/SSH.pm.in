@@ -36,7 +36,7 @@ sub check {
 
   my @tags;
   my $accept = 0;
-  if ( exists $event->{program} && $event->{program} eq 'ssh' ) {
+  if ( exists $event->{program} && $event->{program} eq 'sshd' ) {
     push @tags, ( 'ssh', 'auth' );
 
     if ( $event->{message} =~ $re_accepted ) {
