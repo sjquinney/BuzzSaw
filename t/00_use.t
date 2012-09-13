@@ -10,6 +10,8 @@ use_ok 'BuzzSaw::Parser::RFC3339';
 
 use_ok 'BuzzSaw::Filter::Kernel';
 
+use_ok 'BuzzSaw::Filter::SSH';
+
 use_ok 'BuzzSaw::DataSource::Files';
 
 use_ok 'BuzzSaw::DB::Schema';
