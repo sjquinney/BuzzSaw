@@ -1,6 +1,37 @@
-2012-08-23  SVN: new release
+2012-09-13  SVN: new release
 
-	* Release: 0.6.5
+	* Release: 0.7.0
+
+2012-09-13 15:12  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB/Schema/Result/ExtraInfo.pm.in,
+	  lib/BuzzSaw/Filter/SSH.pm.in: Added new filter for finding events
+	  associated with SSH logins
+
+2012-09-13 15:07  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql, lib/BuzzSaw/DB.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/Event.pm.in,
+	  lib/BuzzSaw/DB/Schema/Result/ExtraInfo.pm.in: Added support for
+	  storing arbitrary key/value pairs as extra information associated
+	  with an event
+
+2012-08-23 15:07  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Kernel.pm.in, lib/BuzzSaw/ReportLog.pm.in:
+	  Added docs
+
+2012-08-23 13:40  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Kernel.pm.in: Added docs
+
+2012-08-23 13:25  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Added docs
+
+2012-08-23 07:47  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.6.5
 
 2012-08-23 07:47  squinney@INF.ED.AC.UK
 
