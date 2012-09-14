@@ -33,7 +33,7 @@ override 'process_events' => sub {
     my $user = $event->userid;
 
     my ($source) = $event->search_related( 'extra_info',
-                                           name => 'source_address' )->all;
+                                           { name => 'source_address' } )->all;
     my $src_addr = $source->val;
 
     # We do not want to put usernames into reports if they do not
