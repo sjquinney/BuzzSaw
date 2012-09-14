@@ -1,6 +1,14 @@
-2012-09-13  SVN: new release
+2012-09-14  SVN: new release
 
-	* Release: 0.7.4
+	* Release: 0.7.5
+
+2012-09-14 10:49  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in: Fixed the register_log method
+
+2012-09-13 16:25  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.4
 
 2012-09-13 16:24  squinney@INF.ED.AC.UK
 
