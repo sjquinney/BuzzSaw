@@ -68,8 +68,7 @@ override 'process_events' => sub {
   );
 
   return %results;
-}
-
+};
 
 no Moose;
 __PACKAGE__->meta->make_immutable;
