@@ -237,8 +237,8 @@ sub register_log {
   my $count = $find_sth->rows;
   if ( $count == 0 ) {
     my $create_sth = $dbh->prepare_cached($create_sql);
-    $find_sth->execute( $logname, $digest );
-    $find_sth->finish;
+    $create_sth->execute( $logname, $digest );
+    $create_sth->finish;
   }
 
   return;
