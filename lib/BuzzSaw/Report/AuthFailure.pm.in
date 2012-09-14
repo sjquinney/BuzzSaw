@@ -1,0 +1,78 @@
+package BuzzSaw::Report::AuthFailure; # -*-perl-*-
+use strict;
+use warnings;
+
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
+our $VERSION = '@LCFG_VERSION@';
+
+use Moose;
+
+extends 'BuzzSaw::Report';
+
+has '+tags' => (
+  default => sub { ['auth_failure'] },
+);
+
+has '+template' => (
+  default => 'auth_failure.tt',
+);
+
+override 'process_events' => sub {
+  my ( $self, @events ) = @_;
+
+  my ( %users, %sources, %targets );
+
+  for my $event (@events) {
+
+    my $host = $event->hostname;
+    my $user = $event->userid;
+
+    my ($source) = $event->search_related( 'extra_info',
+                                           name => 'source_address' )->all;
+    my $src_addr = $source->val;
+
+    # We do not want to put usernames into reports if they do not
+    # exist on our system. They may well be a password which someone
+    # mistakenly entered instead of their username.
+
+    my $uid = getpwnam($user);
+    if ( !defined $uid ) {
+      $user = 'invalid';
+    }
+
+    $users{$user}{count}                += 1;
+    $users{$user}{targets}{$host}       += 1;
+    $users{$user}{sources}{$src_addr}   += 1;
+
+    $targets{$host}{count}              += 1;
+    $targets{$host}{users}{$user}       += 1;
+    $targets{$host}{sources}{$src_addr} += 1;
+
+    # TODO: split these into sets of remote and local addresses
+
+    $sources{$src_addr}{count}          += 1;
+    $sources{$src_addr}{users}{$user}   += 1;
+    $sources{$src_addr}{targets}{$host} += 1;
+
+  }
+
+  my %results = (
+    users   => \%users,
+    targets => \%targets,
+    sources => \%sources,
+  );
+
+  return %results;
+}
+
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+1;
+__END__
