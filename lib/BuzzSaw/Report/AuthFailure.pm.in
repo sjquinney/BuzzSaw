@@ -69,15 +69,15 @@ override 'process_events' => sub {
   }
 
   my @users   = map  { $users{$_}   }
-                sort { $users{$a}{count}   <=> $users{$b}{count} }
+                sort { $users{$b}{count}   <=> $users{$a}{count} }
                 keys %users;
 
   my @targets = map  { $targets{$_} }
-                sort { $targets{$a}{count} <=> $targets{$b}{count} }
+                sort { $targets{$b}{count} <=> $targets{$a}{count} }
                 keys %targets;
 
   my @sources = map  { $sources{$_} }
-                sort { $sources{$a}{count} <=> $sources{$b}{count} }
+                sort { $sources{$b}{count} <=> $sources{$a}{count} }
                 keys %sources;
 
   my %results = (
