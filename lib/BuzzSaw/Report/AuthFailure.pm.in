@@ -45,6 +45,13 @@ override 'process_events' => sub {
       $user = 'invalid';
     }
 
+    # weird but useful for a later stage
+    $users{$user}{user}       = $user;
+    $targets{$host}{host}     = $host;
+    $sources{$src_addr}{addr} = $src_addr;
+
+    # various mappings to help present the results we want
+
     $users{$user}{count}                += 1;
     $users{$user}{targets}{$host}       += 1;
     $users{$user}{sources}{$src_addr}   += 1;
@@ -61,10 +68,22 @@ override 'process_events' => sub {
 
   }
 
+  my @users   = map  { $users{$_}   }
+                sort { $users{$a}{count}   <=> $users{$b}{count} }
+                keys %users;
+
+  my @targets = map  { $targets{$_} }
+                sort { $targets{$a}{count} <=> $targets{$b}{count} }
+                keys %targets;
+
+  my @sources = map  { $sources{$_} }
+                sort { $sources{$a}{count} <=> $sources{$b}{count} }
+                keys %sources;
+
   my %results = (
-    users   => \%users,
-    targets => \%targets,
-    sources => \%sources,
+    users   => \@users,
+    targets => \@targets,
+    sources => \@sources,
   );
 
   return %results;

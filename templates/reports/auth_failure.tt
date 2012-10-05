@@ -8,4 +8,13 @@ During the period since [% params.item('start').strftime('%H:%M:%S %A %e %B %Y')
 
 These authentication failures involved [% results.item('users').size %] different user names, [% results.item('targets').size %] different target hosts and [% results.item('sources').size %] different source hosts.
 
+Users
+================================
+
+[% FOREACH entry IN results.item('users') -%]
+[% loop.count() %]. [% entry.item('user') %] [% entry.item('count') %]
+[% LAST IF loop.count() == 10 -%]
+[% END -%]
+
+
 [% END %]

@@ -29,6 +29,7 @@ BuildRequires:  perl(YAML::Syck), perl(Text::Diff)
 Requires:       perl(MooseX::Log::Log4perl), perl(MooseX::SimpleConfig)
 Requires:       perl(MooseX::Getopt), perl(MooseX::App::Cmd)
 # DBIx::Class loads these dynamically
+Requires:       perl(DBIx::Class)
 Requires:       perl(DBD::Pg), perl(DateTime::Format::Pg)
 
 %description
