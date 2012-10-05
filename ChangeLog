@@ -1,6 +1,35 @@
-2012-09-14  SVN: new release
+2012-10-05  SVN: new release
 
-	* Release: 0.7.5
+	* Release: 0.7.6
+
+2012-10-05 09:55  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DB.pm.in: Truncate some varchar event
+	  fields if the contents is too long, this avoids the DB throwing
+	  an error when we try to do an insert
+
+2012-09-14 14:11  squinney@INF.ED.AC.UK
+
+	* templates/reports/auth_failure.tt: Corrected the retrieval of the
+	  processed data
+
+2012-09-14 14:11  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/AuthFailure.pm.in: hashref not has for search
+
+2012-09-14 14:03  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/AuthFailure.pm.in: Added missing semi-colon
+
+2012-09-14 13:57  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/AuthFailure.pm.in, t/00_use.t,
+	  templates/reports/auth_failure.tt: Added new report for
+	  authentication failures
+
+2012-09-14 10:49  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.5
 
 2012-09-14 10:49  squinney@INF.ED.AC.UK
 
