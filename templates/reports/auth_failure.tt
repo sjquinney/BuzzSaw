@@ -16,5 +16,20 @@ Users
 [% LAST IF loop.count() == 10 -%]
 [% END -%]
 
+Targets
+================================
+
+[% FOREACH entry IN results.item('targets') -%]
+[% loop.count() %]. [% entry.item('host') %] [% entry.item('count') %]
+[% LAST IF loop.count() == 10 -%]
+[% END -%]
+
+Sources
+================================
+
+[% FOREACH entry IN results.item('sources') -%]
+[% loop.count() %]. [% entry.item('addr') %] [% entry.item('count') %]
+[% LAST IF loop.count() == 10 -%]
+[% END -%]
 
 [% END %]

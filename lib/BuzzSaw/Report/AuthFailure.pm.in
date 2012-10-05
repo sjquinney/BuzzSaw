@@ -42,7 +42,7 @@ override 'process_events' => sub {
 
     my $uid = getpwnam($user);
     if ( !defined $uid ) {
-      $user = 'invalid';
+      $user = '**INVALID**';
     }
 
     # weird but useful for a later stage
