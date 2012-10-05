@@ -181,9 +181,20 @@ sub register_event {
   # Cannot just pass in the event hash as it may contain keys which
   # do not map onto column names.
 
+  # To avoid an error being thrown by the database the values for the
+  # following fields must be truncated if they are too long.
+  my %truncate = map { $_ => 1 } qw/hostname raw message program userid/;
+
   my %event_in_db;
   for my $column ( $event_source->columns ) {
     if ( exists $event->{$column} && defined $event->{$column} ) {
+
+      if ( $truncate{$column} ) {
+        my $info = $event_source->column_info($column);
+        $event->{$column} = substr( $event->{$column}, 0, $info->{size} )
+          if length $event->{$column} > $info->{size};
+      }
+
       $event_in_db{$column} = $event->{$column};
     }
   }
