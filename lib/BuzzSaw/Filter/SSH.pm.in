@@ -88,7 +88,7 @@ BuzzSaw::Filter role. It is used to filter log entries and find those
 associated with the SSH daemon. An event will be accepted for storage
 if it is related to a login being accepted or failed. When an event is
 accepted by the SSH filter module it returns C<ssh> and C<auth> tags
-along with one of C<auth_success> or C<auth_failure>.  C<panic>.
+along with one of C<auth_success> or C<auth_failure>.
 
 The BuzzSaw project provides a suite of tools for processing log file
 entries. Entries in files are parsed and filtered into a set of events
