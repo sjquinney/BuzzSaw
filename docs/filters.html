@@ -9,15 +9,23 @@
 
 <p>
 After each log entry has been parsed into its constituent parts it is
-next passed on to the data filtering stage of the pipeline. This is
-the stage at which decisions are made as to whether a log entry should
-be accepted into the database. If no filters have been specified then
-the importer process will import all entries into the
-database. Otherwise, if there are 1 or more filters, then no entries
-are accepted by default, at least one filter must declare an interest
-in a log entry for it to be stored. Each log entry is passed through
-the entire stack of filters in the order in which they were
-specified. As well as declaring an interest in a log entry filters are
+next passed on to the data filtering stage of the importer
+pipeline. This is the stage at which decisions are made as to whether
+a log entry should be stored into the database.
+</p>
+
+<p>
+If no filters have been specified then the importer process will
+import all entries into the database. Otherwise, if there are 1 or
+more filters, then no entries are accepted by default, at least one
+filter must declare an interest in a log entry for it to be
+stored. Each log entry is passed through the entire stack of filters
+in the order in which they were specified, filtering does not stop
+after any one plugin has declared an interest.
+</p>
+
+<p>
+As well as declaring an interest in a particular log entry filters are
 permitted to attach tags and associate other information with an
 entry, which will be stored in the database for later retrieval
 (e.g. when generating reports). The result of this is that subsequent
@@ -26,22 +34,22 @@ results of filters earlier in the pipeline. It is worth noting however
 that an entry will be accepted if ANY filter declares an interest, it
 is not possible for filters later in the stack to overturn the results
 of those previous in the stack. Also note that each log entry is
-filtered individually, it is not possible to make decisions for one
-entry based on decisions that have been previously reached to accept
-or reject other entries. There are no limits to what processing you
-may do on each log entry but clearly when the filter has to be run on
-every entry and there might be millions to process it is worth doing
-only the minimum required if you want the entire process to complete
-in a reasonable amount of time.
+filtered completely separately, it is not possible to make decisions
+for one entry based on decisions that have been previously reached to
+accept or reject other entries. There are no limits to what processing
+you may do on each log entry but clearly when the filter has to be run
+on every entry and there might be millions to process it is worth
+doing only the minimum required if you want the entire process to
+complete in a reasonable amount of time.
 </p>
 
 <h2>Structure of a log entry</h2>
 
 <p>
 When an entry is successfully parsed the separate parts are placed
-into a hash - for speed reasons this is not done in an Object-Oriented
-style. The following elements will be available for querying during
-the filtering stage.
+into a simple Perl hash - for speed reasons this is not done in an
+Object-Oriented style. The following elements will be available for
+querying during the filtering stage.
 </p>
 
 <ul>
@@ -56,13 +64,150 @@ the filtering stage.
   <li><em>time_zone</em> - time zone part of date string (or UTC if
   not specified in the log entry)</li>
   <li><em>hostname</em> - hostname part of log entry</li>
-  <li><em>program</em> - program part of log entry</li>
+  <li><em>program</em> - program part of log entry (undefined if not specified)</li>
   <li><em>pid</em> - pid part of log entry (undefined if not specified)</li>
   <li><em>message</em> - message part of the log entry</li>
   <li><em>raw</em> - original log entry string</li>
-  <li><em>digest</em> - Base64 encode version of the SHA256 digest
+  <li><em>digest</em> - Base64 encoded version of the SHA256 digest
   for the original log entry</li>
 </ul>
+
+<p>
+Note that syslog entries come in a huge variety of styles so some
+fields such as <em>program</em> and <em>pid</em> are not always
+specified. Even when they are present it's not always that easy to
+extract the information without making the regular expression wildly
+complicated. For details on how the strings are parsed see the
+documentation for <code>BuzzSaw::Parser</code>
+and <code>BuzzSaw::Parser::RFC3339</code>.
+</p>
+
+<h2>Implementing a Filter</h2>
+
+<p>
+A BuzzSaw filter is implemented as a Perl class using the Moose
+Object-Oriented framework. It must implement
+the <code>BuzzSaw::Filter</code> role and provide
+a <code>check()</code> method. For example:
+</p>
+
+<p>
+For every parsed log entry the <code>check()</code> method will be
+called, a reference to a hash with the elements described above will
+be passed in as the only argument. The method should return a true
+(e.g. 1) or false (e.g. 0) value which is the declaration of interest
+(or lack of). Optionally it may also return a list of tags (simple
+strings) which should be associated with this log entry when it is
+stored. Note that any tags returned will be ignored if you do not
+declare an interest in the log entry but other extra information can
+still be attached.
+</p>
+
+<pre>
+package BuzzSaw::Filter::Kernel;
+use Moose;
+
+with 'BuzzSaw::Filter';
+
+sub check {
+  my ( $self, $event ) = @_;
+
+  return ( exists $event->{program} && $event->{program} eq 'kernel' );
+}
+</pre>
+
+<h3>Tags</h3>
+
+<p>
+Returning a list of tags is useful to aid later searching and
+reporting. It is not obligatory but clearly it is going to be simpler
+to write an SQL query which states &quot;<em>show me all events with
+the 'authfail' tag</em>&quot; than it is to parse the various strings
+(again) to search for ssh login events which contain particular error
+messages. If nothing else this stores the results of the filter
+process which avoids duplication of code and effort in two different
+languages. The set of collected tags from all filters in the stack
+which express an interest in the entry are uniqueified and stored in
+the <code>tags</code> table in the database.
+</p>
+
+<pre>
+package BuzzSaw::Filter::Kernel;
+use Moose;
+
+with 'BuzzSaw::Filter';
+
+sub check {
+  my ( $self, $event ) = @_;
+
+  my $accept = 0;
+  my @tags;
+  if ( exists $event->{program} && $event->{program} eq 'kernel' ) {
+    push @tags, 'kernel';
+    $accept = 1;
+
+    if ( $event->{message} =~ m/segfault/o ) {
+      push @tags, 'segfault';
+    }
+  }
+
+  return ( $accept, @tags );
+}
+</pre>
+
+<h3>Extra Information</h3>
+
+<p>
+As mentioned above, it is possible to attach extra information to a
+log entry which is going to be stored. This is done via
+the <code>extra_info</code> hash element, it is a reference to a
+simple Perl hash of keys and string values. For example, the SSH
+filter uses this approach to store the source address for each SSH
+login event log entry. These keys and values will be stored in
+the <code>extra_info</code> table in the database. Extra information
+can be specified like this:
+</p>
+
+<verbatim>
+$event->{extra_info}{source_address} = '10.0.0.0';
+</verbatim>
+
+<h3>What to accept</h3>
+
+<p>
+It is very tempting, for the sake of speed and simplicity, to write a
+filter which just declares an interest in every event with the correct
+program string. In a few cases this might be the right thing to do but
+more often it is better to do further filtering based on the message
+to see if it really is of genuine interest. The design of BuzzSaw is
+to only store events of real interest, filling the database with data
+for events you will never subsequently examine adds in a lot more
+noise to the stored data, makes processing and reporting take longer
+and is generally rather pointless. For example, a typical syslog can
+contain hundreds of varied entries related to the kernel most of which
+are of little consequence. We are likely to only be interested in
+serious issues such as panics, oops, out-of-memory conditions. It is
+also worth noting that, in general, any program can insert a syslog
+entry containing any information it likes so you should never
+completely trust the data.
+</p>
+
+<h3>Performance Issues</h3>
+
+<p>
+If BuzzSaw is being used to process logs daily on a central server
+then these filter methods could potentially be called hundreds of
+thousands of times. Consequently, speed is of the essence, it is worth
+spending a little time considering if you can achieve your goals with
+simple string equality checks (e.g. <em>is the program string equal to
+&quot;kernel&quot;</em>) rather than regular expressions. Where regular
+expressions are required then it is best to use the <code>/o</code>
+regular expression modifier to ensure it is only compiled once. It is
+also well worth declaring the regular expressions globally using
+the <code>qr</code> function. The SSH and Kernel filters which are
+shipped as part of the BuzzSaw package are good guides to best
+practice.
+</p>
 
 </body>
 </html>
