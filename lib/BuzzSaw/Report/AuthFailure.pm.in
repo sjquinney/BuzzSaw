@@ -22,6 +22,16 @@ has '+template' => (
   default => 'auth_failure.tt',
 );
 
+# SELECT e.hostname, DATE(e.logtime) AS logdate, count(*)
+#    FROM event           AS e
+#    LEFT JOIN tag        AS t ON t.event = e.id
+#         JOIN extra_info AS i ON i.event = e.id
+#    WHERE
+#      t.name = 'auth_failure' AND
+#      i.name = 'source_address'
+#    GROUP BY e.hostname, DATE(logtime)
+#    ORDER BY e.hostname, logdate;
+
 override 'process_events' => sub {
   my ( $self, @events ) = @_;
 

@@ -243,9 +243,10 @@ sub register_log {
 
   my $find_sth = $dbh->prepare_cached($find_sql);
   $find_sth->execute( $logname, $digest );
+  my $count = $find_sth->rows;
+
   $find_sth->finish;
 
-  my $count = $find_sth->rows;
   if ( $count == 0 ) {
     my $create_sth = $dbh->prepare_cached($create_sql);
     $create_sth->execute( $logname, $digest );
@@ -270,9 +271,10 @@ sub check_log_seen {
 
   my $sth = $dbh->prepare_cached($sql);
   $sth->execute( $logname, $digest );
+  my $count = $sth->rows;
+
   $sth->finish;
 
-  my $count = $sth->rows;
   return $count > 0 ? 1 : 0;
 }
 
