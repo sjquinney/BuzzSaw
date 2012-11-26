@@ -1,6 +1,40 @@
-2012-10-05  SVN: new release
+2012-11-26  SVN: new release
 
-	* Release: 0.7.6
+	* Release: 0.7.7
+
+2012-11-26 14:13  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB.pm.in, lib/BuzzSaw/Report/AuthFailure.pm.in: Fixed
+	  bug with counting the rows after having called finish()
+
+2012-11-22 14:51  squinney@INF.ED.AC.UK
+
+	* docs/filters.html: Added docs on writing filters
+
+2012-11-21 12:52  squinney@INF.ED.AC.UK
+
+	* docs, docs/filters.html, lib/BuzzSaw/Filter/SSH.pm.in: Started
+	  docs on how to write filters
+
+2012-10-05 14:40  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/AuthFailure.pm.in,
+	  templates/reports/auth_failure.tt: Added target and source host
+	  lists to report
+
+2012-10-05 14:30  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/AuthFailure.pm.in: fixed sort order
+
+2012-10-05 14:27  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec, lib/BuzzSaw/Report/AuthFailure.pm.in,
+	  templates/reports/auth_failure.tt: Working on auth failures
+	  report
+
+2012-10-05 09:55  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.6
 
 2012-10-05 09:55  squinney@INF.ED.AC.UK
 
