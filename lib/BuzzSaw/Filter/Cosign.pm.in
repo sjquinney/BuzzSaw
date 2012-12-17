@@ -18,7 +18,7 @@ Readonly my $re_register => qr{^REGISTER\s+
                                 (?<user>\S+)\s+
                                 (?<realm>\S+)\s+
                                 (?<address>$re_ipv4)\s+
-                                (?<target>\S+)
+                                (?<service>\S+)
                                $}xo;
 
 use Moose;
@@ -34,8 +34,8 @@ sub check {
     push @tags, ( 'cosign', 'auth' );
 
     if ( $event->{message} =~ $re_register ) {
-      $event->{userid}   = $+{user};
-      $event->{hostname} = $+{target};
+      $event->{userid} = $+{user};
+      $event->{extra_info}{cosign_service} = $+{service};
       $event->{extra_info}{source_address} = $+{address};
 
       $accept = 1;
