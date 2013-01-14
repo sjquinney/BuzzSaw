@@ -1,6 +1,14 @@
 2013-01-14  SVN: new release
 
-	* Release: 0.8.1
+	* Release: 0.8.2
+
+2013-01-14 14:21  squinney@INF.ED.AC.UK
+
+	* t/00_use.t: bumped number of tests
+
+2013-01-14 14:12  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.8.1
 
 2013-01-14 14:11  squinney@INF.ED.AC.UK
 
