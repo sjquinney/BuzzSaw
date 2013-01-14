@@ -42,12 +42,14 @@ sub check {
     if ( $event->{message} =~ $re_accepted ) {
       $event->{userid} = $+{user};
       $event->{extra_info}{source_address} = $+{address};
+      $event->{extra_info}{auth_method}    = $+{method};
 
       $accept = 1;
       push @tags, 'auth_success';
     } elsif ( $event->{message} =~ $re_failed ) {
       $event->{userid} = $+{user};
       $event->{extra_info}{source_address} = $+{address};
+      $event->{extra_info}{auth_method}    = $+{method};
 
       $accept = 1;
       push @tags, 'auth_failure';
