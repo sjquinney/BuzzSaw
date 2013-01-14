@@ -106,6 +106,8 @@ CREATE TABLE extra_info (
     CONSTRAINT name_event_val UNIQUE(name,event,val)
 );
 
+CREATE index extra_info_name_idx ON extra_info(name);
+
 CREATE TABLE auth_counts_ssh (
     id            SERIAL                   PRIMARY KEY,
     day           date                     NOT NULL,
