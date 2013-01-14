@@ -1,6 +1,34 @@
-2012-11-26  SVN: new release
+2013-01-14  SVN: new release
 
-	* Release: 0.7.7
+	* Release: 0.8.0
+
+2013-01-14 14:01  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: Added an index on the name column of the extra_info
+	  table
+
+2013-01-14 13:57  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql, lcfg.yml, lib/BuzzSaw/Filter/SSH.pm.in: Now stores
+	  the authentication method in the extra_info table
+
+2012-12-17 17:28  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Cosign.pm.in: slightly tweaked the extra
+	  information which is stored
+
+2012-12-17 17:19  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Cosign.pm.in: Added filter for cosign login
+	  events
+
+2012-12-17 16:28  cc@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Sleep.pm.in: first version of a Sleep filter
+
+2012-11-26 14:13  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.7.7
 
 2012-11-26 14:13  squinney@INF.ED.AC.UK
 
