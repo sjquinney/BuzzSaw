@@ -12,7 +12,7 @@ our $VERSION = '@LCFG_VERSION@';
 
 use Readonly;
 
-Readonly my $re_ipv4 = qr{\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}}o;
+Readonly my $re_ipv4 => qr{\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}}o;
 
 Readonly my $re_register => qr{^REGISTER\s+
                                 (?<user>\S+)\s+

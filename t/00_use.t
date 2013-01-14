@@ -8,7 +8,11 @@ use_ok 'BuzzSaw::Types';
 
 use_ok 'BuzzSaw::Parser::RFC3339';
 
+use_ok 'BuzzSaw::Filter::Cosign';
+
 use_ok 'BuzzSaw::Filter::Kernel';
+
+use_ok 'BuzzSaw::Filter::Sleep';
 
 use_ok 'BuzzSaw::Filter::SSH';
 
