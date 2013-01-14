@@ -1,6 +1,16 @@
 2013-01-14  SVN: new release
 
-	* Release: 0.8.0
+	* Release: 0.8.1
+
+2013-01-14 14:11  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Cosign.pm.in, t/00_use.t: Fixed typo. Added
+	  tests for new filter modules so we will spot this quicker next
+	  time
+
+2013-01-14 14:01  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.8.0
 
 2013-01-14 14:01  squinney@INF.ED.AC.UK
 
