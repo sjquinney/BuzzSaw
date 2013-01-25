@@ -1,6 +1,17 @@
-2013-01-14  SVN: new release
+2013-01-25  SVN: new release
 
-	* Release: 0.8.2
+	* Release: 0.8.3
+
+2013-01-25 12:02  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DataSource/Files.pm.in: Added support for
+	  controlling the order in which files are parsed. Added the
+	  ability to set a size limit so we do not attempt to parse
+	  enormous files
+
+2013-01-14 14:21  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.8.2
 
 2013-01-14 14:21  squinney@INF.ED.AC.UK
 
