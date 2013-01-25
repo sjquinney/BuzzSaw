@@ -19,6 +19,7 @@ use IO::File ();
 use List::Util ();
 
 use Moose;
+use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(ArrayRef Bool FileHandle Int Maybe Str);
 
 with 'BuzzSaw::DataSource';
@@ -49,10 +50,22 @@ has 'names' => (
     },
 );
 
+has 'size_limit' => (
+    isa       => 'Str',
+    is        => 'ro',
+    predicate => 'has_size_limit',
+);
+
 has 'recursive' => (
     isa     => Bool,
     is      => 'ro',
     default => 1,
+);
+
+has 'order_by' => (
+    isa       => enum(['random','size_asc','size_desc','name_asc','name_desc']),
+    is        => 'ro',
+    default   => 'random',
 );
 
 has 'files' => (
@@ -112,6 +125,10 @@ sub _find_files {
     $finder->file;     # Only interested in files
     $finder->nonempty; # No point examining empty files
 
+    if ( $self->has_size_limit && $self->size_limit ) {
+      $finder->size($self->size_limit);
+    }
+
     my @rules = map { File::Find::Rule->name( $_ ) } $self->list_names;
 
     $finder->any(@rules);
@@ -130,11 +147,40 @@ sub _find_files {
       $files{$file} = 1;
     }
 
-    # We randomise the order of the list so that multiple processes
-    # will pass through the files in different orders and this should
-    # make the process more efficient.
+    # Typically we randomise the order of the list so that multiple
+    # processes will pass through the files in different orders which
+    # should make the process more efficient. We also support sorting
+    # by name and size in ascending or descending order. The size
+    # sorting can be handy if you really do need to leave the biggest
+    # files until last.
 
-    my @files = List::Util::shuffle( keys %files );
+    my @files;
+    my $order_by = $self->order_by;
+    if ( $order_by =~ m/^size_(asc|desc)$/ ) {
+
+        my $sorter;
+        if ( $1 eq 'asc' ) {
+            $sorter = sub { $a->[1] <=> $b->[1] }; 
+        } else {
+            $sorter = sub { $b->[1] <=> $a->[1] }; 
+        }
+
+        # Schwartzian transform for efficient sorting
+        @files = map  { $_->[0] }
+                 sort $sorter
+                 map  { [ $_, (stat($_))[7] ] } keys %files;
+
+    } elsif ( $order_by =~ m/^name_(asc|desc)$/ ) {
+
+        if ( $1 eq 'asc' ) {
+            @files = sort { $a cmp $b } keys %files;
+        } else {
+            @files = sort { $b cmp $a } keys %files;
+        }
+
+    } else {
+        @files = List::Util::shuffle( keys %files );
+    }
 
     if ( $self->log->is_debug ) {
       my $count = scalar @files;
@@ -206,7 +252,9 @@ sub _next_fh {
     my $new_fh;
     while ( defined $file && !defined $new_fh ) {
       if ( $self->log->is_debug ) {
-        $self->log->debug("Opening $file");
+        my $cur   = $self->_current_fileidx + 1;
+        my $total = $self->count_files;
+        $self->log->debug("Opening $file ($cur/$total)");
       }
 
       $new_fh = eval {
@@ -445,6 +493,27 @@ This is a boolean value which controls whether or not to search
 recursively through the specified directories looking for matching log
 files. The default is true.
 
+=item order_by
+
+This is a string which controls the sequence in which the list of
+files found will be parsed. The supported options are: C<random>,
+C<name_asc>, C<name_desc>, C<size_asc>, C<size_desc>, the default is
+C<random>.
+
+Typically you will want to randomise the order of the list so that
+multiple processes will pass through the files in different orders
+which should make the process more efficient. The size sorting can be
+very useful if you really do need to leave the biggest files until
+last (or get them done first).
+
+=item size_limit
+
+This is a string which is used to set limits on the size (in bytes) of
+the files which will be parsed. The format follows the semantics
+supported by the L<Number::Compare> module, for example "<100M" or
+"<200K". If this is not set or is set to C<0> (zero) all files will be
+parsed.
+
 =back
 
 =head1 SUBROUTINES/METHODS
@@ -468,7 +537,8 @@ This method works through the set of files as a single continuous
 stream. Whenever the end-of-file is reached in one file the next is
 opened until the complete set of data is exhausted. When the end of
 the stream is reached an C<undef> value will be returned, if an error
-occurs this method will die.
+occurs this method will die. The sequence in which files are parsed is
+controlled by the C<order_by> attribute.
 
 Note that this module can handle files which are compressed using gzip
 (if the file name suffix is C<.gz>) or bzip2 (if the file name suffix
