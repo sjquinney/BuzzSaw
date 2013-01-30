@@ -70,6 +70,12 @@ __PACKAGE__->table('event');
   default_value: undef
   is_nullable: 0
 
+=head2 logdate
+
+  data_type: date
+  default_value: undef
+  is_nullable: 0
+
 =head2 hostname
 
   data_type: character varying
@@ -131,6 +137,12 @@ __PACKAGE__->add_columns(
   'logtime',
   {
     data_type         => 'datetime',
+    default_value     => undef,
+    is_nullable       => 0,
+  },
+  'logdate',
+  {
+    data_type         => 'date',
     default_value     => undef,
     is_nullable       => 0,
   },
