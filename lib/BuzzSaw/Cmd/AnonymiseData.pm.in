@@ -24,7 +24,7 @@ has 'db' => (
   is       => 'ro',
   isa      => Str,
   required => 1,
-  default  => '/etc/buzzsaw/db_writer.yaml',
+  default  => '/etc/buzzsaw/db_anonymiser.yaml',
   documentation => 'Database connection configuration file',
 );
 
