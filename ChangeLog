@@ -1,6 +1,14 @@
 2013-02-01  SVN: new release
 
-	* Release: 0.9.1
+	* Release: 0.9.2
+
+2013-02-01 11:30  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd/AnonymiseData.pm.in: minor tweak to debugging
+
+2013-02-01 11:24  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.9.1
 
 2013-02-01 11:23  squinney@INF.ED.AC.UK
 
