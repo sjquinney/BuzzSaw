@@ -24,6 +24,7 @@ BuildRequires:  perl(MooseX::Types::EmailAddress)
 BuildRequires:  perl(Readonly)
 BuildRequires:  perl(UNIVERSAL::require)
 BuildRequires:  perl(YAML::Syck), perl(Text::Diff)
+BuildRequires:  perl(Template)
 
 # These are Moose roles so don't get automatically identified.
 Requires:       perl(MooseX::Log::Log4perl), perl(MooseX::SimpleConfig)
