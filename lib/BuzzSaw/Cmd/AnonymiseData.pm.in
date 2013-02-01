@@ -141,7 +141,7 @@ sub execute {
 
   if ( $self->debug ) {
     my $delete_count = $old_info->count;
-    $self->log->debug("will delete $delete_count info records");
+    $self->log->debug("Found $delete_count old info records");
   }
 
   if ( $self->dryrun ) {
