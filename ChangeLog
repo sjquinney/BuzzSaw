@@ -1,6 +1,15 @@
 2013-02-01  SVN: new release
 
-	* Release: 0.9.0
+	* Release: 0.9.1
+
+2013-02-01 11:23  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Cmd/AnonymiseData.pm.in: Fixed default value for db
+	  config file
+
+2013-02-01 11:18  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.9.0
 
 2013-02-01 11:18  squinney@INF.ED.AC.UK
 
