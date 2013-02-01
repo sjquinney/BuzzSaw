@@ -85,7 +85,7 @@ class_type BuzzSawDB, { class => 'BuzzSaw::DB' };
 coerce BuzzSawDB,
   from Str,
   via { require BuzzSaw::DB;
-        BuzzSaw::DB->new_with_config($_) };
+        BuzzSaw::DB->new_with_config(configfile => $_) };
 
 coerce BuzzSawDB,
   from HashRef,
