@@ -1,6 +1,25 @@
-2013-01-25  SVN: new release
+2013-02-01  SVN: new release
 
-	* Release: 0.8.3
+	* Release: 0.9.0
+
+2013-02-01 11:18  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql, lcfg.yml, lib/BuzzSaw/Cmd/AnonymiseData.pm.in: Added
+	  command for anonymising old data
+
+2013-02-01 11:17  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Types.pm.in: corrected a bug with the way the
+	  new_with_config method was called for BuzzSaw::DB
+
+2013-01-30 20:38  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/DB/Schema/Result/Event.pm.in: Added support for new
+	  logdate column
+
+2013-01-25 12:02  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.8.3
 
 2013-01-25 12:02  squinney@INF.ED.AC.UK
 
