@@ -209,4 +209,12 @@ GRANT SELECT                      ON TABLE auth_counts_ssh_recent
 GRANT SELECT                      ON TABLE auth_counts_ssh_recent
                                   TO logfiles_writer;
 
+-- data anonymisation is very restricted
+
+GRANT SELECT, UPDATE (raw,message,userid) ON TABLE event
+                                          TO logfiles_anonymiser;
+
+GRANT SELECT,DELETE                       ON TABLE extra_info
+                                          TO logfiles_anonymiser;
+
 COMMIT;
