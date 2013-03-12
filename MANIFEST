@@ -17,12 +17,14 @@ lib/BuzzSaw/DB/Schema/Result/Event.pm
 lib/BuzzSaw/DB/Schema/Result/Log.pm
 lib/BuzzSaw/DB/Schema/Result/Tag.pm
 lib/BuzzSaw/Filter/Kernel.pm
+lib/BuzzSaw/Filter/Sleep.pm
 lib/BuzzSaw/Filter.pm
 lib/BuzzSaw/Importer.pm
 lib/BuzzSaw/Parser.pm
 lib/BuzzSaw/Parser/RFC3339.pm
 lib/BuzzSaw/Reporter.pm
 lib/BuzzSaw/Report/Kernel.pm
+lib/BuzzSaw/Report/Sleep.pm
 lib/BuzzSaw/Report.pm
 lib/BuzzSaw/Types.pm
 Makefile.PL

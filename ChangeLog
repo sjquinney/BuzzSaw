@@ -1,3 +1,7 @@
+2013-03-12  15:27 cc@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Sleep.pm.in: a simple sleep report module.
+	
 2013-02-01  SVN: new release
 
 	* Release: 0.9.4

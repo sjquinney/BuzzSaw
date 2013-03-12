@@ -59,6 +59,9 @@ provides:
   BuzzSaw::Filter::Kernel:
     file: lib/BuzzSaw/Filter/Kernel.pm
     version: @LCFG_VERSION@
+  BuzzSaw::Filter::Sleep:
+    file: lib/BuzzSaw/Filter/Sleep.pm
+    version: @LCFG_VERSION@
   BuzzSaw::Importer:
     file: lib/BuzzSaw/Importer.pm
     version: @LCFG_VERSION@
