@@ -11,6 +11,9 @@ use Moose;
 
 with 'BuzzSaw::Filter', 'MooseX::Log::Log4perl';
 
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
 sub check {
   my ( $self, $event ) = @_;
 
