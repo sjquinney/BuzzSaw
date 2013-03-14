@@ -2,11 +2,11 @@ package BuzzSaw::UserClassifier; # -*-perl-*-
 use strict;
 use warnings;
 
-# $Id: Kernel.pm.in 21339 2012-07-11 14:01:02Z squinney@INF.ED.AC.UK $
+# $Id$
 # $Source:$
-# $Revision: 21339 $
-# $HeadURL: https://svn.lcfg.org/svn/source/trunk/BuzzSaw/lib/BuzzSaw/Filter/Kernel.pm.in $
-# $Date: 2012-07-11 15:01:02 +0100 (Wed, 11 Jul 2012) $
+# $Revision$
+# $HeadURL$
+# $Date$
 
 our $VERSION = '@LCFG_VERSION@';
 
