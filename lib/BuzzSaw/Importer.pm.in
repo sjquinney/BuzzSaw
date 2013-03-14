@@ -126,19 +126,25 @@ sub import_events {
 
       # Filtering
 
-      my $accept = $accept_default;
+      my $votes = $accept_default;
 
       if ( $self->has_filters ) {
 
+        my @results;
         my %all_tags;
         for my $filter (@filters) {
-          my ( $result, @tags ) = $filter->check(\%event);
-          if ($result) {
-            $accept = 1;
+          my ( $accept, @tags ) = $filter->check( \%event,
+                                                  $votes, \@results );
+
+          push @results, [ $filter->name => $accept ];
+
+          if ($accept {
+            $votes += 1;
             for my $tag (@tags) {
               $all_tags{$tag} = 1;
             }
           }
+
         }
 
         $event{tags} = [keys %all_tags];
@@ -146,7 +152,7 @@ sub import_events {
 
       # Registering
 
-      if ($accept) {
+      if ($votes) {
         $accepted_count++;
 
         # Convert the various date fields into a DateTime
