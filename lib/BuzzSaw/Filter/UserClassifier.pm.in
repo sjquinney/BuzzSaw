@@ -1,0 +1,44 @@
+package BuzzSaw::Filter::UserClassifier; # -*-perl-*-
+use strict;
+use warnings;
+
+# $Id: Kernel.pm.in 21339 2012-07-11 14:01:02Z squinney@INF.ED.AC.UK $
+# $Source:$
+# $Revision: 21339 $
+# $HeadURL: https://svn.lcfg.org/svn/source/trunk/BuzzSaw/lib/BuzzSaw/Filter/Kernel.pm.in $
+# $Date: 2012-07-11 15:01:02 +0100 (Wed, 11 Jul 2012) $
+
+our $VERSION = '@LCFG_VERSION@';
+
+use BuzzSaw::UserClassifier ();
+
+my $classifier = BuzzSaw::UserClassifier->new(
+  nonpersonal_users => '/usr/share/buzzsaw/data/nonpersonal.txt',
+);
+
+use Moose;
+
+with 'BuzzSaw::Filter', 'MooseX::Log::Log4perl';
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
+
+sub check {
+  my ( $self, $event, $accept ) = @_;
+
+  if ( !$accept ) {
+    return $accept;
+  }
+
+  my @tags;
+  if ( defined $event->{userid} && length $event->{userid} > 0 ) {
+    my $username = $classifier->mangle_username($event->{userid});
+    my $class = $classifier->classify($username);
+
+    my $tag = 'user_is_' . $class;
+    push @tags, $tag;
+  }
+
+  return ( $accept, @tags );
+}
+
