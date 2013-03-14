@@ -61,6 +61,8 @@ sub check {
 }
 
 1;
+__END__
+
 =head1 NAME
 
 BuzzSaw::Filter::SSH - A BuzzSaw event filter for SSH log entries
@@ -100,7 +102,15 @@ reports regarding the events discovered.
 
 =head1 ATTRIBUTES
 
-There are no attributes in this class.
+=over
+
+=item name
+
+The short name of the module. The default is to use the final part of
+the Perl module name lower-cased (e.g. the name of
+C<BuzzSaw::Filter::SSH> is C<ssh>).
+
+=back
 
 =head1 SUBROUTINES/METHODS
 

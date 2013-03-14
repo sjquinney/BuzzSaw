@@ -87,7 +87,15 @@ reports regarding the events discovered.
 
 =head1 ATTRIBUTES
 
-There are no attributes in this class.
+=over
+
+=item name
+
+The short name of the module. The default is to use the final part of
+the Perl module name lower-cased (e.g. the name of
+C<BuzzSaw::Filter::Cosign> is C<cosign>).
+
+=back
 
 =head1 SUBROUTINES/METHODS
 
