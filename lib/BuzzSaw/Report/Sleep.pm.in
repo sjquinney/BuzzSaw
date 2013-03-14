@@ -2,6 +2,12 @@ package BuzzSaw::Report::Sleep; # -*-perl-*-
 use strict;
 use warnings;
 
+# $Id$
+# $Source:$
+# $Revision$
+# $HeadURL$
+# $Date$
+
 our $VERSION = '@LCFG_VERSION@';
 
 use Moose;
