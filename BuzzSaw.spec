@@ -53,6 +53,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 mkdir -p $RPM_BUILD_ROOT/var/lib/buzzsaw
 
+mkdir -p $RPM_BUILD_ROOT/usr/share/buzzsaw/data
+cp nonpersonal.txt $RPM_BUILD_ROOT/usr/share/buzzsaw/data
+
 %check
 ./Build test
 
