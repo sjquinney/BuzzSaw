@@ -13,7 +13,7 @@ name: BuzzSaw
 orgident: org.lcfg
 platforms: 
   - ScientificLinux6
-release: 14
+release: 20
 schema: 1
 translate: 
   - "*.in"

@@ -191,3 +191,161 @@ sub classify {
 
 1;
 __END__
+
+=head1 NAME
+
+BuzzSaw::UserClassifier - Classifies the type of a username
+
+=head1 VERSION
+
+This documentation refers to BuzzSaw::UserClassifier version @LCFG_VERSION@
+
+=head1 SYNOPSIS
+
+   my $classifier = BuzzSaw::UserClassifier->new();
+
+   my $user = "R00t";
+   my $cleaned_username = $classifier->mangle_username($user);
+
+   my $user_type = $classifier->classify($cleaned_username);
+
+   print "Type for $user is $user_type\n";
+
+=head1 DESCRIPTION
+
+The BuzzSaw project provides a suite of tools for processing log file
+entries. Entries in files are parsed and filtered into a set of events
+of interest which are stored in a database. A report generation
+framework is also available which makes it easy to generate regular
+reports regarding the events discovered.
+
+=head1 ATTRIBUTES
+
+=over
+
+=item people
+
+This is the GID of the group in which your "real" users are all members.
+
+=item nonpersonal_users
+
+This is a reference to a hash of usernames which are considered to be
+"non-personal". That is normally a list of users for running daemons,
+and other system tools. It might also include names of teams, units
+and other generic usernames.
+
+This can be specified via a string in which case it is assumed to be
+the name of a file which contains one username per line. This is very
+useful when you have a long list of usernames.
+
+Note that existence in this list is not the only criteria for a
+username to be considered as "non-personal", see below for full
+details.
+
+=back
+
+=head1 SUBROUTINES/METHODS
+
+This class has the following methods:
+
+=over
+
+=item is_user($username)
+
+This method returns a boolean which states whether (or not) the
+specified username exists in the local passwd database.
+
+=item is_person($username)
+
+This method returns a boolean which states whether (or not) the
+specified username is a user (see C<is_user>) AND is a member of the
+group specified in the C<people> attribute.
+
+=item looks_like_person($username)
+
+This method returns a boolean which states whether (or not) the
+username looks like a username. Currently this just does simplistic
+regular expression matching to spot usernames which look like
+University of Edinburgh student or visitor accounts. The intention
+being that this method is used to spot usernames which are most likely
+spelling mistakes (or user mistakes of some type).
+
+=item is_root($username)
+
+This method returns a boolean which states whether (or not) the
+username looks like C<root>. This is done using a case-insensitive
+match on the string C<root> and allows either or both of the C<o>
+characters to be replaced with a C<0> (zero).
+
+=item is_nonpersonal($username)
+
+This method returns a boolean which states whether (or not) the
+username is a non-personal account. If the username matches the
+C<is_person> or C<looks_like_person> methods then this method returns
+false. Otherwise, if the username exists in the local passwd database
+then it will return true. As a final check when nothing else matches
+the hash of non-personal account names will be checked. This hash
+lookup is particularly useful for known daemon and team names which
+are not in the passwd DB for the machine on which the checks are being
+run.
+
+=item mangle_username($username)
+
+This method is used to clean and canonicalise the username. It will
+lowercase the whole string and strip some undesirable characters. It
+also makes an attempt to canonicalise certain common forms of
+usernames. For example, any string starting with C<admin> will result
+in C<admin> being returned (C<admin1> becomes C<admin>,
+C<administrator> becomes C<admin>, etc).
+
+=item classify($username)
+
+This uses the previously described methods to classify the specified
+username. If it matches the C<is_root> method then the string C<root>
+will be returned. If it matches either of the C<is_person> or
+C<looks_like_person> methods then the string C<real> will be
+returned. If it matches the C<is_nonpersonal> method then the string
+C<nonperson> will be returned. Finally, if nothing matches then the
+string C<others> will be returned.
+
+=item in_nonpersonal_users($username)
+
+This method returns a boolean which states whether (or not) the
+specified username exists in the non-personal users hash.
+
+=back
+
+=head1 DEPENDENCIES
+
+This module is powered by L<Moose>. You will also need
+L<MooseX::Types> and L<MooseX::Log::Log4perl>.
+
+=head1 SEE ALSO
+
+L<BuzzSaw>
+
+=head1 PLATFORMS
+
+This is the list of platforms on which we have tested this
+software. We expect this software to work on any Unix-like platform
+which is supported by Perl.
+
+@LCFG_PLATFORMS@
+
+=head1 BUGS AND LIMITATIONS
+
+Please report any bugs or problems (or praise!) to bugs@lcfg.org,
+feedback and patches are also always very welcome.
+
+=head1 AUTHOR
+
+    @LCFG_AUTHOR@
+
+=head1 LICENSE AND COPYRIGHT
+
+    Copyright (C) 2013 University of Edinburgh. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the terms of the GPL, version 2 or later.
+
+=cut
