@@ -81,11 +81,15 @@ has 'template' => (
 );
 
 has 'tmpldirs' => (
+    traits   => ['Array'],
     is       => 'ro',
     isa      => ArrayRef[Str],
     required => 1,
     default  => sub { [ '/usr/share/buzzsaw/templates/reports',
                         '/usr/share/buzzsaw/templates' ] },
+    handles  => {
+      add_tmpldir => 'unshift',
+  },
 );
 
 has 'start' => (
@@ -102,6 +106,13 @@ has 'end' => (
     required => 1,
     coerce   => 1,
     default  => sub { 'today' },
+);
+
+has 'order_by' => (
+    is         => 'ro',
+    isa        => 'ArrayRef|HashRef',
+    required   => 1,
+    default    => sub { ['logtime'] },
 );
 
 has 'tags' => (
@@ -228,7 +239,7 @@ sub find_events {
     ],
   );
 
-  my %attrs = ( order_by => 'logtime' );
+  my %attrs = ( order_by => $self->order_by );
 
   if ( $self->has_tags ) {
 
@@ -370,6 +381,23 @@ this-year, week-ago, seconds from the unix epoch or variously
 formatted date/time strings. See the module documentation for full
 details.
 
+=item order_by
+
+This attribute is used to control the order of the results from the
+search for events of interest. It can be either a reference to an
+array or a reference to a hash. For example:
+
+        order_by => [qw/hostname logtime/]
+
+        For explicit descending order:
+
+         order_by => { -desc => [qw/col1 col2 col3/] }
+
+        For explicit ascending order:
+
+         order_by => { -asc => 'col' }
+
+
 =item tags
 
 This list attribute is used to specify which tags to search for in the
@@ -424,6 +452,14 @@ email. The first address in the C<email_to> address will be set as the
 C<To> field and any further addresses will be placed in the C<Cc>
 field. The message is constructed and sent using the L<MIME::Lite>
 module.
+
+=item add_tmpldir
+
+This can be used to add another directory to the list of those which
+will be searched for templates when generating the report. Note that
+the new directory is put onto the front of the list. This makes it
+possible to override any standard template provided in the default
+directories.
 
 =back
 
