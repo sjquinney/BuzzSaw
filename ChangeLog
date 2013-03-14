@@ -1,10 +1,101 @@
-2013-03-12  15:27 cc@INF.ED.AC.UK
+2013-03-14  SVN: new release
 
-	* lib/BuzzSaw/Report/Sleep.pm.in: a simple sleep report module.
-	
-2013-02-01  SVN: new release
+	* Release: 0.10.0
 
-	* Release: 0.9.4
+2013-03-14 16:16  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/UserClassifier.pm.in: Added docs
+
+2013-03-14 15:18  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/UserClassifier.pm.in: Set svn:keywords
+
+2013-03-14 15:17  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/UserClassifier.pm.in: Switched
+	  BuzzSaw::UserClassifier to be an attribute, this means we can
+	  lazily build it when required rather than at module load time.
+	  Also added documentation for the module
+
+2013-03-14 15:16  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Cosign.pm.in, lib/BuzzSaw/Filter/SSH.pm.in,
+	  lib/BuzzSaw/Filter/Sleep.pm.in: updated docs
+
+2013-03-14 15:15  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Sleep.pm.in: Set svn:keywords
+
+2013-03-14 15:15  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter.pm.in: Updated docs
+
+2013-03-14 15:13  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Updated docs
+
+2013-03-14 15:11  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Altered the voting process slightly.
+	  Now anything returning a true value will have the tags retained
+	  but the entry (and tags) will only be stored if one or more
+	  filter returns a positive value. This change helps
+	  post-processing where we need tags to be retained but do not want
+	  to alter the current state of the votes
+
+2013-03-14 14:15  squinney@INF.ED.AC.UK
+
+	* t/00_use.t: Test new modules
+
+2013-03-14 14:09  squinney@INF.ED.AC.UK
+
+	* BuzzSaw.spec, lcfg.yml, nonpersonal.txt: Added current list of
+	  usernames which are considered to be non-personal
+
+2013-03-14 14:08  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Kernel.pm.in, lib/BuzzSaw/Filter/Sleep.pm.in:
+	  unimport moose once it is not required
+
+2013-03-14 14:08  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Made it much simpler to add new
+	  directories to the template search path. Made it possible to
+	  alter the default sort order
+
+2013-03-14 14:07  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter.pm.in: Added a basic name attribute
+
+2013-03-14 14:07  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Tweaked slightly so that when calling
+	  a filter the current number of votes and the results of the
+	  previous filters are passed in. This makes it much easier to do
+	  post-processing (such as user classification)
+
+2013-03-14 14:06  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/UserClassifier.pm.in,
+	  lib/BuzzSaw/UserClassifier.pm.in: Added new module for
+	  classifying type of user name (root, nonperson, real, others)
+
+2013-03-12 15:28  cc@INF.ED.AC.UK
+
+	* ChangeLog, MANIFEST, META.yml.in, lcfg.yml: added a sleep report
+	  module
+
+2013-03-12 15:24  cc@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report/Sleep.pm.in: Sleep report
+
+2013-03-12 14:21  cc@INF.ED.AC.UK
+
+	* templates/reports/sleep.tt: simple sleep report
+
+2013-02-01 11:42  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.9.4
 
 2013-02-01 11:41  squinney@INF.ED.AC.UK
 
