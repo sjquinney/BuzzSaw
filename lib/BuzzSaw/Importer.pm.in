@@ -138,8 +138,11 @@ sub import_events {
 
           push @results, [ $filter->name => $accept ];
 
-          if ($accept {
-            $votes += 1;
+          if ($accept) {
+            if ( $accept > 0 ) {
+              $votes += $accept;
+            }
+
             for my $tag (@tags) {
               $all_tags{$tag} = 1;
             }
