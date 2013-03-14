@@ -14,6 +14,17 @@ use Moose::Role;
 
 requires 'check';
 
+has 'name' => (
+  is       => 'ro',
+  isa      => Str,
+  required => 1,
+  default  => sub {
+    my $class = shift @_;
+    my $name = ( split /::/, $class->meta->name )[-1];
+    return $name;
+  },
+);
+
 no Moose::Role;
 
 1;
