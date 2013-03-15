@@ -1,10 +1,25 @@
-2013-03-15 09:55  cc@INF.ED.AC.UK
+2013-03-15  SVN: new release
 
-	* lib/BuzzSaw/Report/Sleep.pm.in: add default sleep tag
-	
-2013-03-14  SVN: new release
+	* Release: 0.10.1
 
-	* Release: 0.10.0
+2013-03-15 14:09  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Report.pm.in,
+	  lib/BuzzSaw/Report/Kernel.pm.in, lib/BuzzSaw/Report/Sleep.pm.in:
+	  Reworked how the default value for the report module tags list is
+	  handled. Now it defaults to containing the lower-cased version of
+	  the name attribute. This avoids the possibility of the module
+	  being given ALL events for the period to be processed when no
+	  specific tag list has been set
+
+2013-03-15 09:57  cc@INF.ED.AC.UK
+
+	* ChangeLog, lib/BuzzSaw/Report/Sleep.pm.in: add default sleep tag
+	  to sleep report module
+
+2013-03-14 16:16  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.10.0
 
 2013-03-14 16:16  squinney@INF.ED.AC.UK
 
