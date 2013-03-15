@@ -72,10 +72,10 @@ has 'template' => (
   is       => 'ro',
   isa      => Str,
   required => 1,
-  default => sub {
-    my $class = shift @_;
-    my $mod = ( split /::/, $class->meta->name )[-1];
-    my $template = lc($mod) . '.tt';
+  lazy     => 1,
+  default  => sub {
+    my $self = shift @_;
+    my $template = lc($self->name) . '.tt';
     return $template;
   },
 );
@@ -119,7 +119,9 @@ has 'tags' => (
   traits    => ['Array'],
   is        => 'ro',
   isa       => ArrayRef[Str],
-  default   => sub { [] },
+  lazy      => 1,
+  default   => sub { my $self = shift;
+                     return [lc($self->name)]; },
   handles   => {
     has_tags  => 'count',
     tags_list => 'elements',
@@ -403,7 +405,9 @@ array or a reference to a hash. For example:
 This list attribute is used to specify which tags to search for in the
 database when finding events of interest. If no tags are specified
 then the search will return all events found within the specified
-date/time range. By default the tag list is empty.
+date/time range. By default the tag list contains the lower-cased
+version of the name attribute for the report module instance (e.g. for
+C<BuzzSaw::Report::Kernel> it is C<kernel>.
 
 =back
 

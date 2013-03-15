@@ -14,10 +14,6 @@ use Moose;
 
 extends 'BuzzSaw::Report';
 
-has '+tags' => (
-  default => sub { ['sleep'] },
-);
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
