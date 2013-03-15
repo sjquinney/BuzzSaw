@@ -1,6 +1,14 @@
 2013-03-15  SVN: new release
 
-	* Release: 0.10.1
+	* Release: 0.10.2
+
+2013-03-15 14:22  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, templates/reports/sleep.tt: Avoid blank lines
+
+2013-03-15 14:09  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.10.1
 
 2013-03-15 14:09  squinney@INF.ED.AC.UK
 
