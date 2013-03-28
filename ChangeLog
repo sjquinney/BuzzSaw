@@ -1,6 +1,43 @@
-2013-03-15  SVN: new release
+2013-03-28  SVN: new release
 
-	* Release: 0.10.2
+	* Release: 0.10.3
+
+2013-03-28 16:59  squinney@INF.ED.AC.UK
+
+	* MANIFEST: Updated list of files in manifest
+
+2013-03-28 16:58  squinney@INF.ED.AC.UK
+
+	* META.yml.in, Makefile.PL, lcfg.yml: updated meta files for cpan
+
+2013-03-28 16:48  squinney@INF.ED.AC.UK
+
+	* Build.PL.in, META.yml.in: Added missing deps
+
+2013-03-28 15:26  squinney@INF.ED.AC.UK
+
+	* docs/filters.html, docs/reports.html: reports docs
+
+2013-03-28 14:15  squinney@INF.ED.AC.UK
+
+	* docs/filters.html: updated to reflect reality
+
+2013-03-28 12:51  squinney@INF.ED.AC.UK
+
+	* docs/intro.html, lib/BuzzSaw/Parser/RFC3339.pm.in: small tweaks
+	  to docs
+
+2013-03-28 12:51  squinney@INF.ED.AC.UK
+
+	* docs/design.html: Added more high-level design docs
+
+2013-03-28 11:05  squinney@INF.ED.AC.UK
+
+	* docs/intro.html: First pass on intro docs
+
+2013-03-15 14:22  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.10.2
 
 2013-03-15 14:22  squinney@INF.ED.AC.UK
 
