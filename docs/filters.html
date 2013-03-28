@@ -33,14 +33,12 @@ filters can make decisions and do further processing based on the
 results of filters earlier in the pipeline. It is worth noting however
 that an entry will be accepted if ANY filter declares an interest, it
 is not possible for filters later in the stack to overturn the results
-of those previous in the stack. Also note that each log entry is
-filtered completely separately, it is not possible to make decisions
-for one entry based on decisions that have been previously reached to
-accept or reject other entries. There are no limits to what processing
-you may do on each log entry but clearly when the filter has to be run
-on every entry and there might be millions to process it is worth
-doing only the minimum required if you want the entire process to
-complete in a reasonable amount of time.
+of those previous in the stack. It is possible to make decisions in
+one filter based on the results of previous filters. There are no
+limits to what processing you may do on each log entry but clearly
+when the filter has to be run on every entry and there might be
+millions to process it is worth doing only the minimum required if you
+want the entire process to complete in a reasonable amount of time.
 </p>
 
 <h2>Structure of a log entry</h2>
@@ -75,7 +73,7 @@ querying during the filtering stage.
 <p>
 Note that syslog entries come in a huge variety of styles so some
 fields such as <em>program</em> and <em>pid</em> are not always
-specified. Even when they are present it's not always that easy to
+specified. Even when they are present it is not always that easy to
 extract the information without making the regular expression wildly
 complicated. For details on how the strings are parsed see the
 documentation for <code>BuzzSaw::Parser</code>
@@ -93,15 +91,48 @@ a <code>check()</code> method. For example:
 
 <p>
 For every parsed log entry the <code>check()</code> method will be
-called, a reference to a hash with the elements described above will
-be passed in as the only argument. The method should return a true
-(e.g. 1) or false (e.g. 0) value which is the declaration of interest
-(or lack of). Optionally it may also return a list of tags (simple
+called with the following arguments:</p>
+
+<ol>
+  <li>A reference to a hash containing values for the elements
+  described above.</li>
+  <li>The current number of positive votes cast in favour of storing
+  the event.</li>
+  <li>A reference to an array which provides further details on the
+  decisions reached earlier in the filter stack. Each element in the
+  array is itself a reference to an array where the first element is
+  the name of the filter and the second element is the value returned
+  for the vote (see below for details).</li>
+</ol>
+
+<p>The method must return one of the following values:</p>
+
+<dl>
+  <dt>1 (one)</dt>
+  <dd>Positive vote in favour of having the event stored. Any tags returned will also be stored.</dd>
+  <dt>0 (zero)</dt>
+  <dd>Negative vote, no interest in having the event stored. Any tags returned will be ignored.</dd>
+  <dt>-1 (negative one)</dt>
+  <dd>Neutral, go with the result of other filters in the stack. Any tags returned will be stored.</dd>
+</dl>
+
+<p>The first two options are fairly straightforward. The third may
+seem a little peculiar but it becomes useful when you need to write a
+filter which is designed to make decisions based on the results of
+other filter modules which are placed earlier in the stack. For
+example, the <code>BuzzSaw::Filter::UserClassifier</code> module will
+classify the value of the <em>userid</em> field if it has been added
+by a previous filter (e.g. SSH or Cosign) and extra information will
+be associated with the event.</p>
+
+<p>Optionally, a filter may also return a list of tags (simple
 strings) which should be associated with this log entry when it is
-stored. Note that any tags returned will be ignored if you do not
-declare an interest in the log entry but other extra information can
-still be attached.
-</p>
+stored.</p>
+
+<p>Here is a particularly trivial first example which shows a filter
+which will return true if the event has a value for
+the <em>program</em> field and it matches the <code>kernel</code>
+string.</p>
 
 <pre>
 package BuzzSaw::Filter::Kernel;
@@ -110,7 +141,7 @@ use Moose;
 with 'BuzzSaw::Filter';
 
 sub check {
-  my ( $self, $event ) = @_;
+  my ( $self, $event, $votes, $results ) = @_;
 
   return ( exists $event->{program} && $event->{program} eq 'kernel' );
 }
@@ -123,13 +154,17 @@ Returning a list of tags is useful to aid later searching and
 reporting. It is not obligatory but clearly it is going to be simpler
 to write an SQL query which states &quot;<em>show me all events with
 the 'authfail' tag</em>&quot; than it is to parse the various strings
-(again) to search for ssh login events which contain particular error
+(again) to search for SSH login events which contain particular error
 messages. If nothing else this stores the results of the filter
 process which avoids duplication of code and effort in two different
 languages. The set of collected tags from all filters in the stack
 which express an interest in the entry are uniqueified and stored in
 the <code>tags</code> table in the database.
 </p>
+
+<p>Here is a slightly more involved version of the previous example
+which shows how to add a simple tag (named <code>segfault</code>) when
+the event message contains the word <code>segfault</code>.</p>
 
 <pre>
 package BuzzSaw::Filter::Kernel;
@@ -138,7 +173,7 @@ use Moose;
 with 'BuzzSaw::Filter';
 
 sub check {
-  my ( $self, $event ) = @_;
+  my ( $self, $event, $votes, $results ) = @_;
 
   my $accept = 0;
   my @tags;
@@ -158,9 +193,9 @@ sub check {
 <h3>Extra Information</h3>
 
 <p>
-As mentioned above, it is possible to attach extra information to a
-log entry which is going to be stored. This is done via
-the <code>extra_info</code> hash element, it is a reference to a
+As mentioned previously, it is also possible to attach extra
+information to a log entry which is going to be stored. This is done
+via the <code>extra_info</code> hash element, it is a reference to a
 simple Perl hash of keys and string values. For example, the SSH
 filter uses this approach to store the source address for each SSH
 login event log entry. These keys and values will be stored in
@@ -168,9 +203,17 @@ the <code>extra_info</code> table in the database. Extra information
 can be specified like this:
 </p>
 
-<verbatim>
+<pre>
 $event->{extra_info}{source_address} = '10.0.0.0';
-</verbatim>
+$event->{extra_info}{auth_method}    = 'password';
+</pre>
+
+<p>Note that for data protection reasons the stored log messages are
+anonymised after a certain period of time. The tag data is assumed to
+be safe and is all kept. Currently all other extra information is
+considered to be risky and it is thus deleted when an event is
+anonymised. So, don't rely on the extra information being available
+for really long-term statistical analysis.
 
 <h3>What to accept</h3>
 
