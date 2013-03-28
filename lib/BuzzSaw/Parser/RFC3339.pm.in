@@ -128,8 +128,9 @@ while (defined (my $line = $fh->getline) ) {
 
 This is a Moose class which provides a parser which implements the
 BuzzSaw::Parser role. It can handle log entries that use the RFC3339
-date format. The parser splits a line into separate parts, e.g. date,
-program, pid, message.
+date format (e.g. looks like C<2013-03-28T11:57:30.025350+00:00>. The
+parser splits a line into separate parts, e.g. date, program, pid,
+message.
 
 The BuzzSaw project provides a suite of tools for processing log file
 entries. Entries in files are parsed and filtered into a set of events
