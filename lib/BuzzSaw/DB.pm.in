@@ -291,7 +291,7 @@ This documentation refers to BuzzSaw::DB version @LCFG_VERSION@
 
 =head1 SYNOPSIS
 
-   use BuzzSaw::DB::Schema;
+   use BuzzSaw::DB;
 
    my $db = BuzzSaw::DB->new( name => "logdb",
                               user => "fred",
