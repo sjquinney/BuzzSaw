@@ -108,11 +108,11 @@ called with the following arguments:</p>
 <p>The method must return one of the following values:</p>
 
 <dl>
-  <dt>1 (one)</dt>
+  <dt>1 (one) - <strong><code>$BuzzSaw::Report::VOTE_KEEP</code></strong></dt>
   <dd>Positive vote in favour of having the event stored. Any tags returned will also be stored.</dd>
-  <dt>0 (zero)</dt>
+  <dt>0 (zero) - <strong><code>$BuzzSaw::Report::VOTE_NO_INTEREST</code></strong></dt>
   <dd>Negative vote, no interest in having the event stored. Any tags returned will be ignored.</dd>
-  <dt>-1 (negative one)</dt>
+  <dt>-1 (negative one) - <strong><code>$BuzzSaw::Report::VOTE_NEUTRAL</code></strong></dt>
   <dd>Neutral, go with the result of other filters in the stack. Any tags returned will be stored.</dd>
 </dl>
 
