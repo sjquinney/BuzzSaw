@@ -170,6 +170,13 @@ sub send_email {
     Data     => $text,
   );
 
+  # This is a slightly hacky attempt to avoid getting messages from
+  # vacation auto-responders. The field name needs that trailing colon
+  # as it is not in the list of "standard" headers supported by
+  # MIME::Lite.
+
+  push @args, ( 'Precedence:' => 'bulk' );
+
   if ( scalar @cc > 0 ) {
     my $cc = join q{, }, @cc;
     push @args, ( Cc => $cc );
