@@ -1,6 +1,42 @@
-2013-03-28  SVN: new release
+2013-03-29  SVN: new release
 
-	* Release: 0.10.3
+	* Release: 0.10.4
+
+2013-03-29 11:29  squinney@INF.ED.AC.UK
+
+	* docs/filters.html: list the named constants for the filter voting
+	  system
+
+2013-03-29 11:28  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter.pm.in, lib/BuzzSaw/Filter/Cosign.pm.in,
+	  lib/BuzzSaw/Filter/Kernel.pm.in, lib/BuzzSaw/Filter/SSH.pm.in,
+	  lib/BuzzSaw/Filter/Sleep.pm.in,
+	  lib/BuzzSaw/Filter/UserClassifier.pm.in,
+	  lib/BuzzSaw/Importer.pm.in: Reworked the voting system so that it
+	  uses named constants. This improves the clarity of the decision
+	  making
+
+2013-03-29 10:58  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Report.pm.in: Added bulk precedence heder in the
+	  email sending code to avoid vacation auto-responses
+
+2013-03-29 10:38  squinney@INF.ED.AC.UK
+
+	* docs/database.html, lib/BuzzSaw/DB.pm.in: more database docs
+
+2013-03-29 10:03  squinney@INF.ED.AC.UK
+
+	* docs/database.html: Added basic details of the database schema
+
+2013-03-28 18:11  squinney@INF.ED.AC.UK
+
+	* docs/design.html: fixed closing tag
+
+2013-03-28 17:00  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.10.3
 
 2013-03-28 16:59  squinney@INF.ED.AC.UK
 
