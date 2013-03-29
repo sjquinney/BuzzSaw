@@ -35,7 +35,7 @@ sub check {
   my ( $self, $event ) = @_;
 
   my @tags;
-  my $accept = 0;
+  my $accept = $BuzzSaw::Report::VOTE_NO_INTEREST;
   if ( exists $event->{program} && $event->{program} eq 'sshd' ) {
     push @tags, ( 'ssh', 'auth' );
 
@@ -44,14 +44,14 @@ sub check {
       $event->{extra_info}{source_address} = $+{address};
       $event->{extra_info}{auth_method}    = $+{method};
 
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'auth_success';
     } elsif ( $event->{message} =~ $re_failed ) {
       $event->{userid} = $+{user};
       $event->{extra_info}{source_address} = $+{address};
       $event->{extra_info}{auth_method}    = $+{method};
 
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'auth_failure';
     }
 

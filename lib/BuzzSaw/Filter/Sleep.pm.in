@@ -23,15 +23,15 @@ sub check {
   my ( $self, $event ) = @_;
 
   my @tags;
-  my $accept = 0;
+  my $accept = $BuzzSaw::Report::VOTE_NO_INTEREST;
   if ( exists $event->{program} && $event->{program} eq 'lcfg-sleep' ) {
     push @tags, 'sleep';
 
     if ( $event->{message} eq 'Waking up' ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'acpi_wake';
     } elsif ( $event->{message} eq 'Going to sleep' ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'acpi_sleep';
     }
 

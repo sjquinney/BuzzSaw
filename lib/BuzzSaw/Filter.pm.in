@@ -10,6 +10,12 @@ use warnings;
 
 our $VERSION = '@LCFG_VERSION@';
 
+use Readonly;
+
+Readonly our $VOTE_KEEP        => 1;
+Readonly our $VOTE_NO_INTEREST => 0;
+Readonly our $VOTE_NEUTRAL     => -1;
+
 use Moose::Role;
 
 use MooseX::Types::Moose qw(Str);

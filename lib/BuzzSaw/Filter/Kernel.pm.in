@@ -28,21 +28,21 @@ sub check {
   my ( $self, $event ) = @_;
 
   my @tags;
-  my $accept = 0;
+  my $accept = $BuzzSaw::Report::VOTE_NO_INTEREST;
   if ( exists $event->{program} && $event->{program} eq 'kernel' ) {
     push @tags, 'kernel';
 
     if ( $event->{message} =~ $re_segfault ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'segfault';
     } elsif ( $event->{message} =~ $re_oom ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'oom';
     } elsif ( $event->{message} =~ $re_panic ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'panic';
     } elsif ( $event->{message} =~ $re_oops ) {
-      $accept = 1;
+      $accept = $BuzzSaw::Report::VOTE_KEEP;
       push @tags, 'oops';
     }
 
