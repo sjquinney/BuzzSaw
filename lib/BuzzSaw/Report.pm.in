@@ -12,7 +12,7 @@ our $VERSION = '@LCFG_VERSION@';
 
 use BuzzSaw::DB;
 use BuzzSaw::DateTime;
-use BuzzSaw::Types qw(BuzzSawDB BuzzSawDateTime);
+use BuzzSaw::Types qw(BuzzSawDB BuzzSawDateTime BuzzSawTimeZone);
 
 use MIME::Lite ();
 use Template ();
@@ -113,6 +113,13 @@ has 'order_by' => (
     isa        => 'ArrayRef|HashRef',
     required   => 1,
     default    => sub { ['logtime'] },
+);
+
+has 'timezone' => (
+    is      => 'ro',
+    isa     => BuzzSawTimeZone,
+    coerce  => 1,
+    default => sub { 'local' },
 );
 
 has 'tags' => (
@@ -261,6 +268,11 @@ sub find_events {
 
   my @events = $events_rs->search( \%query, \%attrs );
 
+  # Move all the events to the required timezone if it is not UTC
+  if ( $self->timezone ne 'UTC' ) {
+      map { $_->logtime->set_time_zone($self->timezone) } @events;
+  }
+
   return @events;
 }
 
@@ -389,6 +401,17 @@ include: now, today, recent, yesterday, this-week, this-month,
 this-year, week-ago, seconds from the unix epoch or variously
 formatted date/time strings. See the module documentation for full
 details.
+
+=item timezone
+
+This attribute is used to specify the timezone into which the event
+timestamps (the C<logtime> field) should be converted. The default is
+C<local> which relies on the L<DateTime> module working out what is
+most suitable for your current time zone. All timestamps are stored in
+the database in UTC, if you do not want any conversion then set this
+attribute to C<UTC>. This attribute actually takes a
+L<DateTime::TimeZone> object but a string will be converted
+appropriately.
 
 =item order_by
 
