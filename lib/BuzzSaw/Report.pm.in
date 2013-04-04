@@ -255,7 +255,20 @@ sub find_events {
     ],
   );
 
-  my %attrs = ( order_by => $self->order_by );
+  # Add an extra computed column named "localtime" which holds the
+  # localised version of the logtime. I tried applying the timezone
+  # shift to the DateTime objects after creation but it was woefully
+  # slow.
+
+  # It is reasonably safe to embed the timezone name into some raw SQL
+  # here since we have validated the timezone using the
+  # BuzzSawTimeZone type.
+
+  my $localtime = q{me.logtime at time zone '} . $self->timezone->name . q{' AS localtime};
+
+  my %attrs = ( '+select' => [ \$localtime ],
+                '+as'     => [ 'localtime' ],
+                order_by  => $self->order_by );
 
   if ( $self->has_tags ) {
 
@@ -267,11 +280,6 @@ sub find_events {
   }
 
   my @events = $events_rs->search( \%query, \%attrs );
-
-  # Move all the events to the required timezone if it is not UTC
-  if ( $self->timezone ne 'UTC' ) {
-      map { $_->logtime->set_time_zone($self->timezone) } @events;
-  }
 
   return @events;
 }

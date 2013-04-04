@@ -11,6 +11,7 @@ use warnings;
 our $VERSION = '@LCFG_VERSION@';
 
 use DateTime;
+use Try::Tiny;
 
 use base 'DBIx::Class::Core';
 
@@ -212,6 +213,33 @@ __PACKAGE__->has_many(
   'BuzzSaw::DB::Schema::Result::ExtraInfo',
   { 'foreign.event' => 'self.id' },
 );
+
+sub localtime {
+    my ($self) = @_;
+
+    # This might just count as hack of the week!
+
+    use feature 'state';
+    require DateTime::TimeZone;
+    state $localtz = DateTime::TimeZone->new( name => 'local' );
+
+    # When a specially computed localtime column exists we get the
+    # value and inflate to a datetime object. When it does not exist
+    # we copy the logtime object and shift to the local timezone. The
+    # second option is much slower for large numbers of rows but
+    # should always work.
+
+    my $dt = try { 
+        my $timestamp = $self->get_column('localtime');
+        my $dtf = $self->result_source->storage->datetime_parser();
+        $dtf->parse_datetime($timestamp);
+    } catch {
+        my $clone = $self->logtime->clone();
+        $clone->set_time_zone($localtz);
+    };
+
+    return $dt;
+}
 
 1;
 __END__
