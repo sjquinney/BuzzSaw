@@ -1,6 +1,18 @@
 2013-04-04  SVN: new release
 
-	* Release: 0.11.2
+	* Release: 0.11.3
+
+2013-04-04 16:08  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/DB/Schema/Result/Event.pm.in,
+	  lib/BuzzSaw/Report.pm.in, templates/reports/sleep.tt: Completely
+	  reworked how we get the localtime for an event. This will
+	  hopefully be a lot faster and has the added bonus of providing a
+	  more generally useful method
+
+2013-04-04 06:42  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.11.2
 
 2013-04-04 06:42  squinney@INF.ED.AC.UK
 
