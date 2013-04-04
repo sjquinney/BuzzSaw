@@ -1,6 +1,16 @@
 2013-04-04  SVN: new release
 
-	* Release: 0.11.1
+	* Release: 0.11.2
+
+2013-04-04 06:42  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Filter/Cosign.pm.in, lib/BuzzSaw/Filter/Kernel.pm.in,
+	  lib/BuzzSaw/Filter/SSH.pm.in, lib/BuzzSaw/Filter/Sleep.pm.in,
+	  lib/BuzzSaw/Filter/UserClassifier.pm.in: More variable name fixes
+
+2013-04-04 06:39  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.11.1
 
 2013-04-04 06:36  squinney@INF.ED.AC.UK
 
