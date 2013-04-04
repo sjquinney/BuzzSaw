@@ -38,7 +38,7 @@ sub check {
   my ( $self, $event, $votes ) = @_;
 
   if ( !$votes ) {
-    return $BuzzSaw::Report::VOTE_NO_INTEREST;
+    return $BuzzSaw::Filter::VOTE_NO_INTEREST;
   }
 
   my @tags;
@@ -50,7 +50,7 @@ sub check {
     push @tags, $tag;
   }
 
-  return ( $BuzzSaw::Report::VOTE_NEUTRAL, @tags );
+  return ( $BuzzSaw::Filter::VOTE_NEUTRAL, @tags );
 }
 
 1;

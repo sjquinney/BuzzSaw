@@ -29,7 +29,7 @@ sub check {
   my ( $self, $event ) = @_;
 
   my @tags;
-  my $accept = $BuzzSaw::Report::VOTE_NO_INTEREST;
+  my $accept = $BuzzSaw::Filter::VOTE_NO_INTEREST;
   if ( exists $event->{program} && $event->{program} eq 'cosignd' ) {
     push @tags, ( 'cosign', 'auth' );
 
@@ -38,7 +38,7 @@ sub check {
       $event->{extra_info}{cosign_service} = $+{service};
       $event->{extra_info}{source_address} = $+{address};
 
-      $accept = $BuzzSaw::Report::VOTE_KEEP;
+      $accept = $BuzzSaw::Filter::VOTE_KEEP;
       push @tags, 'auth_success';
     }
 
