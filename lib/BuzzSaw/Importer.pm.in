@@ -138,13 +138,13 @@ sub import_events {
 
           push @results, [ $filter->name => $accept ];
 
-          if ( $accept == $BuzzSaw::Report::VOTE_KEEP ) {
+          if ( $accept == $BuzzSaw::Filter::VOTE_KEEP ) {
             $votes += 1;
 
             for my $tag (@tags) {
               $all_tags{$tag} = 1;
             }
-          } elsif ( $accept == $BuzzSaw::Report::VOTE_NEUTRAL ) {
+          } elsif ( $accept == $BuzzSaw::Filter::VOTE_NEUTRAL ) {
 
             for my $tag (@tags) {
               $all_tags{$tag} = 1;
