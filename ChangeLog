@@ -1,6 +1,14 @@
-2013-04-03  SVN: new release
+2013-04-04  SVN: new release
 
-	* Release: 0.11.0
+	* Release: 0.11.1
+
+2013-04-04 06:36  squinney@INF.ED.AC.UK
+
+	* lib/BuzzSaw/Importer.pm.in: Fixed variable name
+
+2013-04-03 19:40  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.11.0
 
 2013-04-03 19:38  squinney@INF.ED.AC.UK
 
