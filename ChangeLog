@@ -1,6 +1,26 @@
-2013-04-04  SVN: new release
+2013-04-05  SVN: new release
 
-	* Release: 0.11.3
+	* Release: 0.12.0
+
+2013-04-05 12:36  squinney@INF.ED.AC.UK
+
+	* buzzsaw.sql: throw more indexes at the event table in a bid to
+	  make reports quicker
+
+2013-04-05 12:33  squinney@INF.ED.AC.UK
+
+	* lcfg.yml, lib/BuzzSaw/Report.pm.in,
+	  lib/BuzzSaw/Report/Kernel.pm.in, lib/BuzzSaw/Report/Sleep.pm.in:
+	  Added support for restricting report queries by the value of the
+	  program field. This helps speed things up when the query might
+	  return a lot of results. Also altered the default for the tags
+	  list. This is now empty by default which makes a bit more sense
+	  in most cases where the program field is set to the name of the
+	  report. Reports should define the list of tags they want
+
+2013-04-04 16:08  squinney@INF.ED.AC.UK
+
+	* ChangeLog, lcfg.yml: BuzzSaw release: 0.11.3
 
 2013-04-04 16:08  squinney@INF.ED.AC.UK
 
