@@ -14,6 +14,10 @@ use Moose;
 
 extends 'BuzzSaw::Report';
 
+has '+tags' => (
+    default => sub { [ 'segfault', 'oom', 'oops', 'panic' ] },
+);
+
 override 'process_events' => sub {
   my ( $self, @events ) = @_;
 

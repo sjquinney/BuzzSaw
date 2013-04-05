@@ -122,13 +122,19 @@ has 'timezone' => (
     default => sub { 'local' },
 );
 
+has 'program' => (
+    is      => 'ro',
+    isa     => Str,
+    default => sub { my $self = shift;
+                     return lc($self->name); },
+);
+
 has 'tags' => (
   traits    => ['Array'],
   is        => 'ro',
   isa       => ArrayRef[Str],
   lazy      => 1,
-  default   => sub { my $self = shift;
-                     return [lc($self->name)]; },
+  default   => sub { [] },
   handles   => {
     has_tags  => 'count',
     tags_list => 'elements',
@@ -266,17 +272,30 @@ sub find_events {
 
   my $localtime = q{me.logtime at time zone '} . $self->timezone->name . q{' AS localtime};
 
-  my %attrs = ( '+select' => [ \$localtime ],
-                '+as'     => [ 'localtime' ],
-                order_by  => $self->order_by );
+  my %attrs = (
+      '+select' => [ \$localtime ],
+      '+as'     => [ 'localtime' ],
+      join      => 'tags',
+      order_by  => $self->order_by,
+  );
+
+  if ( $self->program =~ m/\S/ ) {
+    $query{program} = $self->program;
+  }
 
   if ( $self->has_tags ) {
 
     # join onto the tag table and search for events with the specified tags
 
-    $attrs{join} = 'tags';
-
     $query{'tags.name'} = { -in => $self->tags };
+  } else {
+
+      # prefetching does not entirely make sense when tags have been
+      # specified. Need to think about how to rework the query so that
+      # it is possible to limit the returned list of events to a set
+      # of tags but then prefetch the complete set for each event.
+
+      $attrs{prefetch} = 'tags';
   }
 
   my @events = $events_rs->search( \%query, \%attrs );
@@ -437,15 +456,20 @@ array or a reference to a hash. For example:
 
          order_by => { -asc => 'col' }
 
+=item program
+
+This is the name of the program field you wish to match in the log
+messages. By default the value is the lower-cased version of the name
+attribute for the report module instance (e.g. for
+C<BuzzSaw::Report::Kernel> it is C<kernel>. If you wish to match all
+log messages then set this to the empty string C<''>.
 
 =item tags
 
 This list attribute is used to specify which tags to search for in the
 database when finding events of interest. If no tags are specified
 then the search will return all events found within the specified
-date/time range. By default the tag list contains the lower-cased
-version of the name attribute for the report module instance (e.g. for
-C<BuzzSaw::Report::Kernel> it is C<kernel>.
+date/time range. The default is an empty list.
 
 =back
 
