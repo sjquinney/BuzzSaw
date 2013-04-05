@@ -75,8 +75,10 @@ CREATE TABLE event (
     userid   VARCHAR(20)
 );
 
+CREATE INDEX event_program_idx ON event(program);
 CREATE INDEX event_userid_idx  ON event(userid);
 CREATE INDEX event_logdate_idx ON event(logdate);
+CREATE INDEX event_logtime_idx ON event(logtime);
 
 CREATE FUNCTION set_event_date_func () RETURNS trigger AS '
  BEGIN
